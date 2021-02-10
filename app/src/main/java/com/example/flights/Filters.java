@@ -42,21 +42,21 @@ public class Filters extends AppCompatActivity {
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
         Bundle b=getIntent().getExtras();
-//        seekbar=findViewById(R.id.seekbar);
+
         slider=findViewById(R.id.slider);
         maxprice=findViewById(R.id.maxPrice);
         minprice=findViewById(R.id.minPrice);
         count=findViewById(R.id.count);
 
         try{
-            Log.d(TAG, "onCreate: asdfbgfdsaadfghffdfghgfdfgfsdfgfsfdffg");
             oneway = (ArrayList<ArrayList<OneItinerary>>) getIntent().getSerializableExtra("oneway");
             returnway= (ArrayList<ArrayList<ReturnItinerary>>) getIntent().getSerializableExtra("returnway");;
             newoneway = (ArrayList<ArrayList<OneItinerary>>) getIntent().getSerializableExtra("oneway");
             newreturnway= (ArrayList<ArrayList<ReturnItinerary>>) getIntent().getSerializableExtra("returnway");
+
             minPrice=b.getFloat("minPrice",0.0f);
             maxPrice= b.getFloat("maxPrice", 0.0f);
-            Log.d(TAG, "data: "+b.getFloat("maxPrice", 0.0f)+" "+b.getFloat("minPrice",0.0f));
+//            Log.d(TAG, "data: "+b.getFloat("maxPrice", 0.0f)+" "+b.getFloat("minPrice",0.0f));
 
             slider.setValueFrom((b.getFloat("minPrice",0.0f)));
             slider.setValueTo(b.getFloat("maxPrice", 0.0f));
@@ -83,9 +83,7 @@ public class Filters extends AppCompatActivity {
         apply.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-//                filterData();
                 Log.d(TAG, "onClick: ");
-//                Log.d(TAG, "onClick: "+newoneway.size());
                 Bundle bundle1=new Bundle();
                 bundle1.putSerializable("oneway",newoneway);
                 bundle1.putSerializable("returnway",newreturnway);

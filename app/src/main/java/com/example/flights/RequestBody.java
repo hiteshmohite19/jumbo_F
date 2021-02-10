@@ -28,6 +28,10 @@ public class RequestBody {
         this.travelToCity = travelToCity;
     }
 
+    public RequestBody(RequestBody requestBody) {
+    }
+
+
     public String getCurrency() {
         return Currency;
     }

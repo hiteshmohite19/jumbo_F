@@ -114,18 +114,19 @@ public class MainActivity extends AppCompatActivity {
 
         FlightApi flightApi = retrofit.create(FlightApi.class);
 
+        RequestBody requestBody=new RequestBody("INR", "2021-03-02", "Android", "IN", "255.177.148.251", "BOMI228DS", "1", "I", "B2C", "1", "0", "0", "2021-03-22", "BKK", "BOM", "Y", "BOM", "Mumbai  [BOM] - Chhatrapati Shivaji Maharaj Airport", "Mumbai", "BKK", "Bangkok  [BKK] - Bangkok", "Bangkok");
 
-        searchGDS(flightApi);
-        searchSTS(flightApi);
-        search6E(flightApi);
-        searchSG(flightApi);
-        searchG8(flightApi);
+        searchGDS(flightApi,requestBody);
+        searchSTS(flightApi,requestBody);
+        search6E(flightApi,requestBody);
+        searchSG(flightApi,requestBody);
+        searchG8(flightApi,requestBody);
 
 
     }
 
-    public void searchGDS(FlightApi flightApi){
-        Call<FlightDetails> call = flightApi.Search_GDS(new RequestBody("INR", "2021-03-02", "Android", "IN", "255.177.148.251", "BOMI228DS", "1", "I", "B2C", "1", "0", "0", "2021-03-22", "BKK", "BOM", "Y", "BOM", "Mumbai  [BOM] - Chhatrapati Shivaji Maharaj Airport", "Mumbai", "BKK", "Bangkok  [BKK] - Bangkok", "Bangkok"));
+    public void searchGDS(FlightApi flightApi,RequestBody requestBody){
+        Call<FlightDetails> call = flightApi.Search_GDS(requestBody);
 
         call.enqueue(new Callback<FlightDetails>() {
             @Override
@@ -163,8 +164,8 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
-    public void searchSTS(FlightApi flightApi){
-        Call<FlightDetails> call1 = flightApi.Search_STS(new RequestBody("INR", "2021-03-02", "Android", "IN", "255.177.148.251", "BOMI228DS", "1", "I", "B2C", "1", "0", "0", "2021-03-22", "BKK", "BOM", "Y", "BOM", "Mumbai  [BOM] - Chhatrapati Shivaji Maharaj Airport", "Mumbai", "BKK", "Bangkok  [BKK] - Bangkok", "Bangkok"));
+    public void searchSTS(FlightApi flightApi,RequestBody requestBody){
+        Call<FlightDetails> call1 = flightApi.Search_STS((requestBody));
 
 
         call1.enqueue(new Callback<FlightDetails>() {
@@ -196,8 +197,8 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
-    public void search6E(FlightApi flightApi){
-        Call<FlightDetails> call2 = flightApi.Search_6E(new RequestBody("INR", "2021-03-02", "Android", "IN", "255.177.148.251", "BOMI228DS", "1", "I", "B2C", "1", "0", "0", "2021-03-22", "BKK", "BOM", "Y", "BOM", "Mumbai  [BOM] - Chhatrapati Shivaji Maharaj Airport", "Mumbai", "BKK", "Bangkok  [BKK] - Bangkok", "Bangkok"));
+    public void search6E(FlightApi flightApi,RequestBody requestBody){
+        Call<FlightDetails> call2 = flightApi.Search_6E((requestBody));
 
 
         call2.enqueue(new Callback<FlightDetails>() {
@@ -229,8 +230,8 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
-    public void searchSG(FlightApi flightApi){
-        Call<FlightDetails> call3 = flightApi.Search_SG(new RequestBody("INR", "2021-03-02", "Android", "IN", "255.177.148.251", "BOMI228DS", "1", "I", "B2C", "1", "0", "0", "2021-03-22", "BKK", "BOM", "Y", "BOM", "Mumbai  [BOM] - Chhatrapati Shivaji Maharaj Airport", "Mumbai", "BKK", "Bangkok  [BKK] - Bangkok", "Bangkok"));
+    public void searchSG(FlightApi flightApi,RequestBody requestBody){
+        Call<FlightDetails> call3 = flightApi.Search_SG((requestBody));
 
         call3.enqueue(new Callback<FlightDetails>() {
             @Override
@@ -261,8 +262,8 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
-    public void searchG8(FlightApi flightApi){
-        Call<FlightDetails> call3 = flightApi.Search_G8(new RequestBody("INR", "2021-03-02", "Android", "IN", "255.177.148.251", "BOMI228DS", "1", "I", "B2C", "1", "0", "0", "2021-03-22", "BKK", "BOM", "Y", "BOM", "Mumbai  [BOM] - Chhatrapati Shivaji Maharaj Airport", "Mumbai", "BKK", "Bangkok  [BKK] - Bangkok", "Bangkok"));
+    public void searchG8(FlightApi flightApi,RequestBody requestBody){
+        Call<FlightDetails> call3 = flightApi.Search_G8((requestBody));
 
         call3.enqueue(new Callback<FlightDetails>() {
             @Override
