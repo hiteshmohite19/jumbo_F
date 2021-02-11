@@ -21,14 +21,14 @@ import java.util.Date;
 public class Filters extends AppCompatActivity {
 
     private static final String TAG = "project";
-    int stopCount=-1;
+    int stopCount=-1,filterCount=0;
     String depRange="",fromto="from";
     TextView from,to,clear,count,maxprice,minprice;
     LinearLayout zerostop,onestop,twostop,btnDep1,btnDep2,btnDep3,btnDep4;
     ArrayList<ArrayList<OneItinerary>> oneway,newoneway;
     ArrayList<ArrayList<ReturnItinerary>> returnway,newreturnway;
     Button apply;
-
+    Float sliderPrice;
     Slider slider;
     Float minPrice,maxPrice;
 
@@ -61,7 +61,7 @@ public class Filters extends AppCompatActivity {
             slider.setValueFrom((b.getFloat("minPrice",0.0f)));
             slider.setValueTo(b.getFloat("maxPrice", 0.0f));
             slider.setValue(b.getFloat("maxPrice", 0.0f));
-
+            sliderPrice=b.getFloat("maxPrice", 0.0f);
             minprice.setText(String.valueOf(b.getFloat("minPrice",0.0f)));
             maxprice.setText(String.valueOf(b.getFloat("maxPrice", 0.0f)));
             count.setText(newoneway.size()+" of "+newoneway.size());
@@ -100,7 +100,8 @@ public class Filters extends AppCompatActivity {
             @Override
             public void onValueChange(@NonNull Slider slider, float value, boolean fromUser) {
                 Log.d(TAG, "onValueChange: "+value);
-                updateDataOnSliderChanger(value);
+                sliderPrice=value;
+                updateDataOnSliderChanger(sliderPrice);
             }
         });
 
@@ -167,7 +168,12 @@ public class Filters extends AppCompatActivity {
                 onestop.setBackground(getResources().getDrawable(R.drawable.roundcorner_grey));
                 twostop.setBackground(getResources().getDrawable(R.drawable.roundcorner_grey));
                 stopCount=1;
-                filterByStopCount(stopCount);
+                if(filterCount==0){
+                    updateDataOnSliderChanger(sliderPrice);filterByStopCount(stopCount);
+                    filterCount=1;
+                }else if(filterCount==2)
+                    filterByStopCount(stopCount);
+
             }
         });
         onestop.setOnClickListener(new View.OnClickListener() {
@@ -236,6 +242,7 @@ public class Filters extends AppCompatActivity {
 
 
     public void updateDataOnSliderChanger(Float val){
+        Log.d(TAG, "price: "+val);
         newoneway=new ArrayList<>();
         newreturnway=new ArrayList<>();
         for(int i=0;i<oneway.size();i++){
@@ -252,22 +259,32 @@ public class Filters extends AppCompatActivity {
 
 
     public void filterByStopCount(int stopCount){
-        int c1=0,c2=0;
         Log.d(TAG, "filterByStopCount: asdfghjkl"+" "+stopCount+" "+newoneway.size()+ " ");
 
         if(stopCount==1){
             newoneway.removeIf(one->stopCount!=one.size());
-            newreturnway.removeIf(ret->stopCount!=ret.size());
+            newreturnway.removeIf(ret->stopCount!=ret.size());;
         }else if(stopCount==2){
             newoneway.removeIf(one->stopCount!=one.size());
             newreturnway.removeIf(ret->stopCount!=ret.size());
         }else if(stopCount>=3){
+            updateDataOnSliderChanger(sliderPrice);
             newoneway.removeIf(one->stopCount>=one.size());
             newreturnway.removeIf(ret->stopCount>=ret.size());
         }
         count.setText(newoneway.size()+" "+oneway.size());
         
         Log.d(TAG, "count : "+newoneway.size());
+    }
+
+    public void filterZeroStopCount(){
+        newoneway.removeIf(one->stopCount!=one.size());
+        newreturnway.removeIf(ret->stopCount!=ret.size());
+    }
+
+    public void filterOneStopCount(){
+        newoneway.removeIf(one->stopCount!=one.size());
+        newreturnway.removeIf(ret->stopCount!=ret.size());
     }
 
 

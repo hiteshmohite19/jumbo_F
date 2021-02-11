@@ -358,7 +358,6 @@ public class MainActivity extends AppCompatActivity {
                 public int compare(ArrayList<OneItinerary> o1, ArrayList<OneItinerary> o2) {
                     String dep1=(o1.get(0).getTotalPrice());
                     String dep2=(o2.get(0).getTotalPrice());
-//                    Log.d(TAG, "compare: "+dep1+" "+dep2);
                     return ((Float)Float.parseFloat(dep1)).compareTo((Float)Float.parseFloat(dep2));
                 }
             });
@@ -381,7 +380,6 @@ public class MainActivity extends AppCompatActivity {
                         LocalDateTime dateTime4 = LocalDateTime.parse(o2.get(o2.size() - 1).getArrivalDateTime());
 
                         d2 = Duration.between(dateTime3, dateTime4);
-//                        Log.d(TAG, "compare: "+d1.compareTo(d2));
                     } else {
 
                         LocalDateTime dateTime1 = LocalDateTime.parse(o1.get(0).getDepartureDateTime());
