@@ -205,6 +205,7 @@ public class Filters extends AppCompatActivity {
                 btnDep3.setBackground(getResources().getDrawable(R.drawable.roundcorner_grey));
                 btnDep4.setBackground(getResources().getDrawable(R.drawable.roundcorner_grey));
                 depRange="Before6am";
+                filterCount=2;
             }
         });
         btnDep2.setOnClickListener(new View.OnClickListener() {
@@ -215,6 +216,7 @@ public class Filters extends AppCompatActivity {
                 btnDep3.setBackground(getResources().getDrawable(R.drawable.roundcorner_grey));
                 btnDep4.setBackground(getResources().getDrawable(R.drawable.roundcorner_grey));
                 depRange="6amTo12pm";
+                filterCount=2;
             }
         });
         btnDep3.setOnClickListener(new View.OnClickListener() {
@@ -225,6 +227,7 @@ public class Filters extends AppCompatActivity {
                 btnDep3.setBackground(getResources().getDrawable(R.drawable.roundcorner_red));
                 btnDep4.setBackground(getResources().getDrawable(R.drawable.roundcorner_grey));
                 depRange="12pmTo6pm";
+                filterCount=2;
             }
         });
         btnDep4.setOnClickListener(new View.OnClickListener() {
@@ -235,6 +238,7 @@ public class Filters extends AppCompatActivity {
                 btnDep3.setBackground(getResources().getDrawable(R.drawable.roundcorner_grey));
                 btnDep4.setBackground(getResources().getDrawable(R.drawable.roundcorner_red));
                 depRange="After6pm";
+                filterCount=2;
             }
         });
     }
@@ -260,18 +264,18 @@ public class Filters extends AppCompatActivity {
     public void filterByStopCount(int stopCount){
         Log.d(TAG, "filterByStopCount: asdfghjkl"+" "+stopCount+" "+newoneway.size()+ " ");
 
-        if(filterCount==1){
+        if(filterCount==1)
             updateDataOnSliderChanger(sliderPrice);
-            if(stopCount==1){
-                newoneway.removeIf(one->stopCount!=one.size());
-                newreturnway.removeIf(ret->stopCount!=ret.size());;
-            }else if(stopCount==2){
-                newoneway.removeIf(one->stopCount!=one.size());
-                newreturnway.removeIf(ret->stopCount!=ret.size());
-            }else if(stopCount>=3){
-                newoneway.removeIf(one->stopCount>=one.size());
-                newreturnway.removeIf(ret->stopCount>=ret.size());
-            }
+
+        if(stopCount==1){
+            newoneway.removeIf(one->stopCount!=one.size());
+            newreturnway.removeIf(ret->stopCount!=ret.size());;
+        }else if(stopCount==2){
+            newoneway.removeIf(one->stopCount!=one.size());
+            newreturnway.removeIf(ret->stopCount!=ret.size());
+        }else if(stopCount>=3){
+            newoneway.removeIf(one->stopCount>=one.size());
+            newreturnway.removeIf(ret->stopCount>=ret.size());
         }
         count.setText(newoneway.size()+" "+oneway.size());
         
