@@ -168,11 +168,7 @@ public class Filters extends AppCompatActivity {
                 onestop.setBackground(getResources().getDrawable(R.drawable.roundcorner_grey));
                 twostop.setBackground(getResources().getDrawable(R.drawable.roundcorner_grey));
                 stopCount=1;
-                if(filterCount==0){
-                    updateDataOnSliderChanger(sliderPrice);filterByStopCount(stopCount);
-                    filterCount=1;
-                }else if(filterCount==2)
-                    filterByStopCount(stopCount);
+                filterByStopCount(stopCount);
 
             }
         });
