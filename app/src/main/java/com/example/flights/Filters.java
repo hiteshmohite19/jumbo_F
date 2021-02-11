@@ -168,6 +168,7 @@ public class Filters extends AppCompatActivity {
                 onestop.setBackground(getResources().getDrawable(R.drawable.roundcorner_grey));
                 twostop.setBackground(getResources().getDrawable(R.drawable.roundcorner_grey));
                 stopCount=1;
+                filterCount=1;
                 filterByStopCount(stopCount);
 
             }
@@ -179,6 +180,7 @@ public class Filters extends AppCompatActivity {
                 onestop.setBackground(getResources().getDrawable(R.drawable.roundcorner_red));
                 twostop.setBackground(getResources().getDrawable(R.drawable.roundcorner_grey));
                 stopCount=2;
+                filterCount=1;
                 filterByStopCount(stopCount);
             }
         });
@@ -189,6 +191,7 @@ public class Filters extends AppCompatActivity {
                 onestop.setBackground(getResources().getDrawable(R.drawable.roundcorner_grey));
                 twostop.setBackground(getResources().getDrawable(R.drawable.roundcorner_red));
                 stopCount=3;
+                filterCount=1;
                 filterByStopCount(stopCount);
             }
         });
@@ -257,33 +260,24 @@ public class Filters extends AppCompatActivity {
     public void filterByStopCount(int stopCount){
         Log.d(TAG, "filterByStopCount: asdfghjkl"+" "+stopCount+" "+newoneway.size()+ " ");
 
-        if(stopCount==1){
+        if(filterCount==1){
             updateDataOnSliderChanger(sliderPrice);
-            newoneway.removeIf(one->stopCount!=one.size());
-            newreturnway.removeIf(ret->stopCount!=ret.size());;
-        }else if(stopCount==2){
-            updateDataOnSliderChanger(sliderPrice);
-            newoneway.removeIf(one->stopCount!=one.size());
-            newreturnway.removeIf(ret->stopCount!=ret.size());
-        }else if(stopCount>=3){
-            updateDataOnSliderChanger(sliderPrice);
-            newoneway.removeIf(one->stopCount>=one.size());
-            newreturnway.removeIf(ret->stopCount>=ret.size());
+            if(stopCount==1){
+                newoneway.removeIf(one->stopCount!=one.size());
+                newreturnway.removeIf(ret->stopCount!=ret.size());;
+            }else if(stopCount==2){
+                newoneway.removeIf(one->stopCount!=one.size());
+                newreturnway.removeIf(ret->stopCount!=ret.size());
+            }else if(stopCount>=3){
+                newoneway.removeIf(one->stopCount>=one.size());
+                newreturnway.removeIf(ret->stopCount>=ret.size());
+            }
         }
         count.setText(newoneway.size()+" "+oneway.size());
         
         Log.d(TAG, "count : "+newoneway.size());
     }
 
-    public void filterZeroStopCount(){
-        newoneway.removeIf(one->stopCount!=one.size());
-        newreturnway.removeIf(ret->stopCount!=ret.size());
-    }
-
-    public void filterOneStopCount(){
-        newoneway.removeIf(one->stopCount!=one.size());
-        newreturnway.removeIf(ret->stopCount!=ret.size());
-    }
 
 
     public int filterDepRange(String date,int i){
