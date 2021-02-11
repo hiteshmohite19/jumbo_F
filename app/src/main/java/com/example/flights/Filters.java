@@ -258,9 +258,11 @@ public class Filters extends AppCompatActivity {
         Log.d(TAG, "filterByStopCount: asdfghjkl"+" "+stopCount+" "+newoneway.size()+ " ");
 
         if(stopCount==1){
+            updateDataOnSliderChanger(sliderPrice);
             newoneway.removeIf(one->stopCount!=one.size());
             newreturnway.removeIf(ret->stopCount!=ret.size());;
         }else if(stopCount==2){
+            updateDataOnSliderChanger(sliderPrice);
             newoneway.removeIf(one->stopCount!=one.size());
             newreturnway.removeIf(ret->stopCount!=ret.size());
         }else if(stopCount>=3){
