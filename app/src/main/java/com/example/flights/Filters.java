@@ -206,6 +206,7 @@ public class Filters extends AppCompatActivity {
                 btnDep4.setBackground(getResources().getDrawable(R.drawable.roundcorner_grey));
                 depRange="Before6am";
                 filterCount=2;
+                filterDepTime();
             }
         });
         btnDep2.setOnClickListener(new View.OnClickListener() {
@@ -217,6 +218,7 @@ public class Filters extends AppCompatActivity {
                 btnDep4.setBackground(getResources().getDrawable(R.drawable.roundcorner_grey));
                 depRange="6amTo12pm";
                 filterCount=2;
+                filterDepTime();
             }
         });
         btnDep3.setOnClickListener(new View.OnClickListener() {
@@ -228,6 +230,7 @@ public class Filters extends AppCompatActivity {
                 btnDep4.setBackground(getResources().getDrawable(R.drawable.roundcorner_grey));
                 depRange="12pmTo6pm";
                 filterCount=2;
+                filterDepTime();
             }
         });
         btnDep4.setOnClickListener(new View.OnClickListener() {
@@ -239,6 +242,7 @@ public class Filters extends AppCompatActivity {
                 btnDep4.setBackground(getResources().getDrawable(R.drawable.roundcorner_red));
                 depRange="After6pm";
                 filterCount=2;
+                filterDepTime();
             }
         });
     }
@@ -279,44 +283,55 @@ public class Filters extends AppCompatActivity {
         }
         count.setText(newoneway.size()+" "+oneway.size());
         
-        Log.d(TAG, "count : "+newoneway.size());
+        Log.d(TAG, "count : "+newoneway.size()+" "+newoneway.get(0).get(0).getDepartureDateTime());
     }
 
 
 
-    public int filterDepRange(String date,int i){
-        if (depRange=="Before6am") {
-            Date endDate = new Date("2021/02/02 06:00:00");
-//            Log.d(TAG, "filterByDepartureTime: " + date + " ******* " + endDate);
-            if (filterDate(stringToDate(date), null, endDate)) {
-                return i;
-            }
+    public int filterDepTime(){
+
+        if(filterCount==2)
+            updateDataOnSliderChanger(sliderPrice);
+
+        if(depRange=="Before6am"){
+            Date endDate = new Date("2021/02/02 12:00:00");
+            newoneway.removeIf(one-> filterDate(stringToDate(one.get(0).getDepartureDateTime()),null,endDate)==true );
+            Log.d(TAG, "filterDepTime: "+newoneway.size()+" xyz ; ");
         }
-        else if(depRange=="6amTo12pm"){
-            Date startDate=new Date("2021/02/02 06:00:00");
-            Date endDate=new Date("2021/02/02 12:00:00");
-            if (filterDate(stringToDate(date), startDate, endDate)) {
-                return i;
-            }
-        }else if(depRange=="12pmTo6pm"){
-            Date startDate=new Date("2021/02/02 12:00:00");
-            Date endDate=new Date("2021/02/02 18:00:00");
-            if (filterDate(stringToDate(date), startDate, endDate)) {
-                return i;
-            }
-        }else if(depRange=="After6pm"){
-            Date startDate=new Date("2021/02/02 18:00:00");
+
+//        if (depRange=="Before6am") {
+//            Date endDate = new Date("2021/02/02 06:00:00");
+////            Log.d(TAG, "filterByDepartureTime: " + date + " ******* " + endDate);
+//            if (filterDate(stringToDate(date), null, endDate)) {
+////                return i;
+//            }
+//        }
+//        else if(depRange=="6amTo12pm"){
+//            Date startDate=new Date("2021/02/02 06:00:00");
+//            Date endDate=new Date("2021/02/02 12:00:00");
+//            if (filterDate(stringToDate(date), startDate, endDate)) {
+////                return i;
+//            }
+//        }else if(depRange=="12pmTo6pm"){
+//            Date startDate=new Date("2021/02/02 12:00:00");
 //            Date endDate=new Date("2021/02/02 18:00:00");
-            if (filterDate(stringToDate(date), startDate, null)) {
-                return i;
-            }
-        }
+//            if (filterDate(stringToDate(date), startDate, endDate)) {
+////                return i;
+//            }
+//        }else if(depRange=="After6pm"){
+//            Date startDate=new Date("2021/02/02 18:00:00");
+////            Date endDate=new Date("2021/02/02 18:00:00");
+//            if (filterDate(stringToDate(date), startDate, null)) {
+////                return i;
+//            }
+//        }
         return -1;
     }
 
     public boolean filterDate(Date oneDate, Date startDate, Date endDate){
         if(startDate==null){
             if(oneDate.before(endDate)){
+                Log.d(TAG, "c: ");
                 return true;
             }
         }
@@ -333,23 +348,24 @@ public class Filters extends AppCompatActivity {
         return false;
     }
 
-    public boolean totalPrice(String price){
-        Float totalprice=Float.parseFloat(price);
-
-        if(slider.getValue()>0){
-            if(totalprice<slider.getValue()){
-                return true;
-            }
-        }else {
-            return true;
-        }
-        return false;
-    }
+//    public boolean totalPrice(String price){
+//        Float totalprice=Float.parseFloat(price);
+//
+//        if(slider.getValue()>0){
+//            if(totalprice<slider.getValue()){
+//                return true;
+//            }
+//        }else {
+//            return true;
+//        }
+//        return false;
+//    }
 
     public Date stringToDate(String date){
         SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm");
         try{
             Date d=formatter.parse(date);
+//            Log.d(TAG, "stringToDate: "+d);
             return d;
         }catch (Exception e){
             Log.d(TAG, "stringToDate: "+e.getMessage());
