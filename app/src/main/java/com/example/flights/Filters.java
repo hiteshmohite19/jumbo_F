@@ -284,7 +284,7 @@ public class Filters extends AppCompatActivity {
         }
         count.setText(newoneway.size()+" "+oneway.size());
         
-        Log.d(TAG, "count : "+newoneway.size()+" "+newoneway.get(0).get(0).getDepartureDateTime());
+        Log.d(TAG, "count : "+newoneway.size()+" ");
     }
 
 
@@ -294,18 +294,48 @@ public class Filters extends AppCompatActivity {
         if(filterCount==2)
             updateDataOnSliderChanger(sliderPrice);
 
-        for(ArrayList<OneItinerary> one: newoneway){
-            Date endDate = new Date("2021/03/02 06:00:00");
-            Calendar calendar=Calendar.getInstance();
-            calendar.setTime(endDate);
-//            endDate=calendar.getTime();
-//            Date oneDate=calendar.getTime();
-            Log.d(TAG, "filterDepTime: "+calendar);
-            Log.d(TAG, "filterDepTime: "+filterDate(stringToDate(one.get(0).getDepartureDateTime()),null,endDate));
-            c++;
+
+        if(fromto=="from"){
+            if(depRange=="Before6am"){
+                Date endDate = new Date("2021/03/02 06:00:00");
+//            Calendar calendar=Calendar.getInstance();
+//            calendar.setTime(endDate);
+                newoneway.removeIf(oneItineraries->filterDate(stringToDate(oneItineraries.get(0).getDepartureDateTime()),null,endDate)==false);
+            }
+            else if(depRange=="6amTo12pm"){
+                Date startDate = new Date("2021/03/02 06:00:00");
+                Date endDate = new Date("2021/03/02 12:00:00");
+                newoneway.removeIf(oneItineraries->filterDate(stringToDate(oneItineraries.get(0).getDepartureDateTime()),startDate,endDate)==false);
+            }
+            else if(depRange=="12pmTo6pm"){
+                Date startDate = new Date("2021/03/02 12:00:00");
+                Date endDate = new Date("2021/03/02 18:00:00");
+                newoneway.removeIf(oneItineraries->filterDate(stringToDate(oneItineraries.get(0).getDepartureDateTime()),startDate,endDate)==false);
+            }
+            else if(depRange=="After6pm"){
+                Date startDate = new Date("2021/03/02 18:00:00");
+//            Date endDate = new Date("2021/03/02 18:00:00");
+                newoneway.removeIf(oneItineraries->filterDate(stringToDate(oneItineraries.get(0).getDepartureDateTime()),startDate,null)==false);
+            }
         }
 
-        Log.d(TAG, "filterDepTime: "+c);
+//        for(ArrayList<OneItinerary> one: newoneway){
+//            Date endDate = new Date("2021/03/02 06:00:00");
+//            Calendar calendar=Calendar.getInstance();
+//            calendar.setTime(endDate);
+//            Calendar calendar1=Calendar.getInstance();
+//            calendar1.setTime(stringToDate(one.get(0).getDepartureDateTime()));
+//
+////            endDate=calendar.getTime();
+////            Date oneDate=calendar.getTime();
+//            Log.d(TAG, "filterDepTime: "+calendar.getTime()+" "+calendar1.getTime());
+////            if(calendar.getTime().before(calendar1.getTime()))
+////                c++;
+//            boolean check=filterDate(stringToDate(one.get(0).getDepartureDateTime()),null,endDate);
+//            Log.d(TAG, "filterDepTime: "+filterDate(stringToDate(one.get(0).getDepartureDateTime()),null,endDate));
+//        }
+
+        Log.d(TAG, "filterDepTime: "+c+" ** "+newoneway.size());
 
 //        if(depRange=="Before6am"){
 //            Date endDate = new Date("2021/02/02 06:00:00");
@@ -378,9 +408,12 @@ public class Filters extends AppCompatActivity {
     public Date stringToDate(String date){
         SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm");
         try{
+            Calendar calendar=Calendar.getInstance();
             Date d=formatter.parse(date);
+            calendar.setTime(d);
+
 //            Log.d(TAG, "stringToDate: "+d);
-            return d;
+            return calendar.getTime();
         }catch (Exception e){
             Log.d(TAG, "stringToDate: "+e.getMessage());
         }
