@@ -16,6 +16,7 @@ import com.google.android.material.slider.Slider;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 
 public class Filters extends AppCompatActivity {
@@ -289,15 +290,28 @@ public class Filters extends AppCompatActivity {
 
 
     public int filterDepTime(){
-
+        int c=0;
         if(filterCount==2)
             updateDataOnSliderChanger(sliderPrice);
 
-        if(depRange=="Before6am"){
-            Date endDate = new Date("2021/02/02 06:00:00");
-            newoneway.removeIf(one-> filterDate(stringToDate(one.get(0).getDepartureDateTime()),null,endDate)==true );
-            Log.d(TAG, "filterDepTime: "+newoneway.size()+" xyz ; ");
+        for(ArrayList<OneItinerary> one: newoneway){
+            Date endDate = new Date("2021/03/02 06:00:00");
+            Calendar calendar=Calendar.getInstance();
+            calendar.setTime(endDate);
+//            endDate=calendar.getTime();
+//            Date oneDate=calendar.getTime();
+            Log.d(TAG, "filterDepTime: "+calendar);
+            Log.d(TAG, "filterDepTime: "+filterDate(stringToDate(one.get(0).getDepartureDateTime()),null,endDate));
+            c++;
         }
+
+        Log.d(TAG, "filterDepTime: "+c);
+
+//        if(depRange=="Before6am"){
+//            Date endDate = new Date("2021/02/02 06:00:00");
+//            newoneway.removeIf(one-> filterDate(stringToDate(one.get(0).getDepartureDateTime()),null,endDate)==true );
+//            Log.d(TAG, "filterDepTime: "+newoneway.size()+" xyz ; ");
+//        }
 
 //        if (depRange=="Before6am") {
 //            Date endDate = new Date("2021/02/02 06:00:00");
