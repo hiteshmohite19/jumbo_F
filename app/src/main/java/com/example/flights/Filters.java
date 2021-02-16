@@ -294,7 +294,7 @@ public class Filters extends AppCompatActivity {
             updateDataOnSliderChanger(sliderPrice);
 
         if(depRange=="Before6am"){
-            Date endDate = new Date("2021/02/02 12:00:00");
+            Date endDate = new Date("2021/02/02 06:00:00");
             newoneway.removeIf(one-> filterDate(stringToDate(one.get(0).getDepartureDateTime()),null,endDate)==true );
             Log.d(TAG, "filterDepTime: "+newoneway.size()+" xyz ; ");
         }
