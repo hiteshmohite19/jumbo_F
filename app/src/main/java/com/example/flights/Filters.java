@@ -317,6 +317,8 @@ public class Filters extends AppCompatActivity {
 //            Date endDate = new Date("2021/03/02 18:00:00");
                 newoneway.removeIf(oneItineraries->filterDate(stringToDate(oneItineraries.get(0).getDepartureDateTime()),startDate,null)==false);
             }
+
+            count.setText(newoneway.size()+" "+oneway.size());
         }
 
 //        for(ArrayList<OneItinerary> one: newoneway){
