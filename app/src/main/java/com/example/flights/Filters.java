@@ -17,13 +17,15 @@ import com.google.android.material.slider.Slider;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collections;
 import java.util.Date;
+import java.util.Iterator;
 
 public class Filters extends AppCompatActivity {
 
     private static final String TAG = "project";
     int stopCount=-1,filterCount=0;
-    String depRange="",fromto="from";
+    String depRange="",fromto="from",departureDate="",returnDate="";
     TextView from,to,clear,count,maxprice,minprice;
     LinearLayout zerostop,onestop,twostop,btnDep1,btnDep2,btnDep3,btnDep4;
     ArrayList<ArrayList<OneItinerary>> oneway,newoneway;
@@ -54,7 +56,10 @@ public class Filters extends AppCompatActivity {
             returnway= (ArrayList<ArrayList<ReturnItinerary>>) getIntent().getSerializableExtra("returnway");;
             newoneway = (ArrayList<ArrayList<OneItinerary>>) getIntent().getSerializableExtra("oneway");
             newreturnway= (ArrayList<ArrayList<ReturnItinerary>>) getIntent().getSerializableExtra("returnway");
+            departureDate=b.getString("departureDate");
+            returnDate=b.getString("returnDate");
 
+            Log.d(TAG, "onCreate: "+departureDate+" "+returnDate);
             minPrice=b.getFloat("minPrice",0.0f);
             maxPrice= b.getFloat("maxPrice", 0.0f);
 //            Log.d(TAG, "data: "+b.getFloat("maxPrice", 0.0f)+" "+b.getFloat("minPrice",0.0f));
@@ -140,7 +145,6 @@ public class Filters extends AppCompatActivity {
         btnDep2=findViewById(R.id.btnDep2);
         btnDep3=findViewById(R.id.btnDep3);
         btnDep4=findViewById(R.id.btnDep4);
-
 
 
         from.setOnClickListener(new View.OnClickListener() {
@@ -268,25 +272,40 @@ public class Filters extends AppCompatActivity {
 
     public void filterByStopCount(int stopCount){
         Log.d(TAG, "filterByStopCount: asdfghjkl"+" "+stopCount+" "+newoneway.size()+ " ");
-
+        int i=0;
         if(filterCount==1)
             updateDataOnSliderChanger(sliderPrice);
 
-        if(stopCount==1){
-            newoneway.removeIf(one->stopCount!=one.size());
-            newreturnway.removeIf(ret->stopCount!=ret.size());;
-        }else if(stopCount==2){
-            newoneway.removeIf(one->stopCount!=one.size());
-            newreturnway.removeIf(ret->stopCount!=ret.size());
-        }else if(stopCount>=3){
-            newoneway.removeIf(one->stopCount>=one.size());
-            newreturnway.removeIf(ret->stopCount>=ret.size());
+        ArrayList<Integer> index=new ArrayList<>();
+        for(ArrayList<OneItinerary> one : newoneway){
+
+            if(stopCount==1 && one.size()!=1){
+                index.add(i);
+                i++;
+            }
+            else if(stopCount==2 && one.size()!=2){
+                index.add(i);
+                i++;
+            }
+            else if(stopCount>2 && one.size()>2){
+                index.add(i);
+                i++;
+            }
         }
+
+        stopCountFilter(index);
+
         count.setText(newoneway.size()+" "+oneway.size());
-        
-        Log.d(TAG, "count : "+newoneway.size()+" ");
     }
 
+    public void stopCountFilter(ArrayList<Integer> indexesToRemove){
+
+        Collections.reverse(indexesToRemove);
+        for (Integer indexToRemove : indexesToRemove) {
+            newoneway.remove((int)indexToRemove);
+            newreturnway.remove((int)indexToRemove);
+        }
+    }
 
 
     public int filterDepTime(){
@@ -297,84 +316,54 @@ public class Filters extends AppCompatActivity {
 
         if(fromto=="from"){
             if(depRange=="Before6am"){
-                Date endDate = new Date("2021/03/02 06:00:00");
-//            Calendar calendar=Calendar.getInstance();
-//            calendar.setTime(endDate);
-                newoneway.removeIf(oneItineraries->filterDate(stringToDate(oneItineraries.get(0).getDepartureDateTime()),null,endDate)==false);
+                Date endDate = new Date(departureDate+" 06:00:00");
+                for(ArrayList<OneItinerary> one : newoneway){
+
+                }
             }
             else if(depRange=="6amTo12pm"){
-                Date startDate = new Date("2021/03/02 06:00:00");
-                Date endDate = new Date("2021/03/02 12:00:00");
-                newoneway.removeIf(oneItineraries->filterDate(stringToDate(oneItineraries.get(0).getDepartureDateTime()),startDate,endDate)==false);
+                Date startDate = new Date(departureDate+" 06:00:00");
+                Date endDate = new Date(departureDate+" 12:00:00");
             }
             else if(depRange=="12pmTo6pm"){
-                Date startDate = new Date("2021/03/02 12:00:00");
-                Date endDate = new Date("2021/03/02 18:00:00");
-                newoneway.removeIf(oneItineraries->filterDate(stringToDate(oneItineraries.get(0).getDepartureDateTime()),startDate,endDate)==false);
+                Date startDate = new Date(departureDate+" 12:00:00");
+                Date endDate = new Date(departureDate+" 18:00:00");
             }
             else if(depRange=="After6pm"){
-                Date startDate = new Date("2021/03/02 18:00:00");
-//            Date endDate = new Date("2021/03/02 18:00:00");
-                newoneway.removeIf(oneItineraries->filterDate(stringToDate(oneItineraries.get(0).getDepartureDateTime()),startDate,null)==false);
+                Date startDate = new Date(departureDate+" 18:00:00");
+            }
+
+            count.setText(newoneway.size()+" "+oneway.size());
+        }
+        else if(fromto=="to"){
+            Log.d(TAG, "filterDepTime: "+fromto);
+            if(depRange=="Before6am"){
+                Date endDate = new Date(returnDate+" 06:00:00");
+            }
+            else if(depRange=="6amTo12pm"){
+                Date startDate = new Date(returnDate+" 06:00:00");
+                Date endDate = new Date(returnDate+" 12:00:00");
+            }
+            else if(depRange=="12pmTo6pm"){
+                Date startDate = new Date(returnDate+" 12:00:00");
+                Date endDate = new Date(returnDate+" 18:00:00");
+            }
+            else if(depRange=="After6pm"){
+                Date startDate = new Date(returnDate+" 18:00:00");
             }
 
             count.setText(newoneway.size()+" "+oneway.size());
         }
 
-//        for(ArrayList<OneItinerary> one: newoneway){
-//            Date endDate = new Date("2021/03/02 06:00:00");
-//            Calendar calendar=Calendar.getInstance();
-//            calendar.setTime(endDate);
-//            Calendar calendar1=Calendar.getInstance();
-//            calendar1.setTime(stringToDate(one.get(0).getDepartureDateTime()));
-//
-////            endDate=calendar.getTime();
-////            Date oneDate=calendar.getTime();
-//            Log.d(TAG, "filterDepTime: "+calendar.getTime()+" "+calendar1.getTime());
-////            if(calendar.getTime().before(calendar1.getTime()))
-////                c++;
-//            boolean check=filterDate(stringToDate(one.get(0).getDepartureDateTime()),null,endDate);
-//            Log.d(TAG, "filterDepTime: "+filterDate(stringToDate(one.get(0).getDepartureDateTime()),null,endDate));
-//        }
 
         Log.d(TAG, "filterDepTime: "+c+" ** "+newoneway.size());
 
-//        if(depRange=="Before6am"){
-//            Date endDate = new Date("2021/02/02 06:00:00");
-//            newoneway.removeIf(one-> filterDate(stringToDate(one.get(0).getDepartureDateTime()),null,endDate)==true );
-//            Log.d(TAG, "filterDepTime: "+newoneway.size()+" xyz ; ");
-//        }
 
-//        if (depRange=="Before6am") {
-//            Date endDate = new Date("2021/02/02 06:00:00");
-////            Log.d(TAG, "filterByDepartureTime: " + date + " ******* " + endDate);
-//            if (filterDate(stringToDate(date), null, endDate)) {
-////                return i;
-//            }
-//        }
-//        else if(depRange=="6amTo12pm"){
-//            Date startDate=new Date("2021/02/02 06:00:00");
-//            Date endDate=new Date("2021/02/02 12:00:00");
-//            if (filterDate(stringToDate(date), startDate, endDate)) {
-////                return i;
-//            }
-//        }else if(depRange=="12pmTo6pm"){
-//            Date startDate=new Date("2021/02/02 12:00:00");
-//            Date endDate=new Date("2021/02/02 18:00:00");
-//            if (filterDate(stringToDate(date), startDate, endDate)) {
-////                return i;
-//            }
-//        }else if(depRange=="After6pm"){
-//            Date startDate=new Date("2021/02/02 18:00:00");
-////            Date endDate=new Date("2021/02/02 18:00:00");
-//            if (filterDate(stringToDate(date), startDate, null)) {
-////                return i;
-//            }
-//        }
         return -1;
     }
 
     public boolean filterDate(Date oneDate, Date startDate, Date endDate){
+        Log.d(TAG, "filterDate: "+oneDate+" "+startDate+" "+endDate);
         if(startDate==null){
             if(oneDate.before(endDate)){
                 Log.d(TAG, "c: ");

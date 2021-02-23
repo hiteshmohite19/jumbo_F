@@ -45,7 +45,7 @@ public class MainActivity extends AppCompatActivity {
     ArrayList<JourneyReturn> journeyReturns;
     ArrayList<OneItinerary> oneItineraries;
     ArrayList<ReturnItinerary> returnItineraries;
-
+    RequestBody requestBody;
     Bundle bundle;
     String depTimeRange="",fromto="";
     int stopCount=-1,count=0;
@@ -93,6 +93,8 @@ public class MainActivity extends AppCompatActivity {
                 bundle1.putSerializable("returnway",returnway);
                 bundle1.putFloat("minPrice",minPrice);
                 bundle1.putFloat("maxPrice",maxPice);
+                bundle1.putString("departureDate",requestBody.getDepDate());
+                bundle1.putString("returnDate",requestBody.getReturnDate());
 
                 Intent intent = new Intent(MainActivity.this, Filters.class);
                 intent.putExtras(bundle1);
@@ -114,7 +116,7 @@ public class MainActivity extends AppCompatActivity {
 
         FlightApi flightApi = retrofit.create(FlightApi.class);
 
-        RequestBody requestBody=new RequestBody("INR", "2021-03-02", "Android", "IN", "255.177.148.251", "BOMI228DS", "1", "I", "B2C", "1", "0", "0", "2021-03-22", "BKK", "BOM", "Y", "BOM", "Mumbai  [BOM] - Chhatrapati Shivaji Maharaj Airport", "Mumbai", "BKK", "Bangkok  [BKK] - Bangkok", "Bangkok");
+        requestBody=new RequestBody("INR", "2021/03/02", "Android", "IN", "255.177.148.251", "BOMI228DS", "1", "I", "B2C", "1", "0", "0", "2021/03/22", "BKK", "BOM", "Y", "BOM", "Mumbai  [BOM] - Chhatrapati Shivaji Maharaj Airport", "Mumbai", "BKK", "Bangkok  [BKK] - Bangkok", "Bangkok");
 
         searchGDS(flightApi,requestBody);
         searchSTS(flightApi,requestBody);
