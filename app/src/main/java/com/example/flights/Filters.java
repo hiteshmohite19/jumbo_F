@@ -254,7 +254,6 @@ public class Filters extends AppCompatActivity {
 
 
     public void updateDataOnSliderChanger(Float val){
-        Log.d(TAG, "price: "+val);
         newoneway=new ArrayList<>();
         newreturnway=new ArrayList<>();
         for(int i=0;i<oneway.size();i++){
@@ -271,31 +270,50 @@ public class Filters extends AppCompatActivity {
 
 
     public void filterByStopCount(int stopCount){
-        Log.d(TAG, "filterByStopCount: asdfghjkl"+" "+stopCount+" "+newoneway.size()+ " ");
         int i=0;
         if(filterCount==1)
             updateDataOnSliderChanger(sliderPrice);
 
         ArrayList<Integer> index=new ArrayList<>();
-        for(ArrayList<OneItinerary> one : newoneway){
+        if(fromto=="from"){
+            for(ArrayList<OneItinerary> one : newoneway){
 
-            if(stopCount==1 && one.size()!=1){
-                index.add(i);
-                i++;
+                if(stopCount==1 && one.size()!=1){
+                    index.add(i);
+                    i++;
+                }
+                else if(stopCount==2 && one.size()!=2){
+                    index.add(i);
+                    i++;
+                }
+                else if(stopCount>2 && !(one.size()>2)){
+                    index.add(i);
+                    i++;
+                }
             }
-            else if(stopCount==2 && one.size()!=2){
-                index.add(i);
-                i++;
-            }
-            else if(stopCount>2 && one.size()>2){
-                index.add(i);
-                i++;
+        }
+        else if(fromto=="to"){
+            for(ArrayList<ReturnItinerary> one : newreturnway){
+
+                if(stopCount==1 && one.size()!=1){
+                    index.add(i);
+                    i++;
+                }
+                else if(stopCount==2 && one.size()!=2){
+                    index.add(i);
+                    i++;
+                }
+                else if(stopCount>2 && !(one.size()>2)){
+                    index.add(i);
+                    i++;
+                }
             }
         }
 
         stopCountFilter(index);
 
         count.setText(newoneway.size()+" "+oneway.size());
+        Log.d(TAG, "count "+newoneway.size()+ " "+newreturnway.size());
     }
 
     public void stopCountFilter(ArrayList<Integer> indexesToRemove){
@@ -312,7 +330,6 @@ public class Filters extends AppCompatActivity {
         int c=0;
         if(filterCount==2)
             updateDataOnSliderChanger(sliderPrice);
-
 
         if(fromto=="from"){
             if(depRange=="Before6am"){
