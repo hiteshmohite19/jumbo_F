@@ -24,9 +24,11 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
+import java.util.concurrent.TimeUnit;
 import java.util.stream.Collector;
 import java.util.stream.Collectors;
 
+import okhttp3.OkHttpClient;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -109,14 +111,21 @@ public class MainActivity extends AppCompatActivity {
 
         Log.e("suraj", "getApidAta call");
 
+        OkHttpClient okHttpClient = new OkHttpClient.Builder()
+                .connectTimeout(1, TimeUnit.MINUTES)
+                .readTimeout(30, TimeUnit.SECONDS)
+                .writeTimeout(15, TimeUnit.SECONDS)
+                .build();
+
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl(base_url)
+                .client(okHttpClient)
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
 
         FlightApi flightApi = retrofit.create(FlightApi.class);
 
-        requestBody=new RequestBody("INR", "2021/03/02", "Android", "IN", "255.177.148.251", "BOMI228DS", "1", "I", "B2C", "1", "0", "0", "2021/03/22", "BKK", "BOM", "Y", "BOM", "Mumbai  [BOM] - Chhatrapati Shivaji Maharaj Airport", "Mumbai", "BKK", "Bangkok  [BKK] - Bangkok", "Bangkok");
+        requestBody=new RequestBody("INR", "2021/10/01", "Android", "IN", "255.177.148.251", "BOMI228DS", "1", "I", "B2C", "1", "0", "0", "2021/10/10", "BKK", "BOM", "Y", "BOM", "Mumbai  [BOM] - Chhatrapati Shivaji Maharaj Airport", "Mumbai", "BKK", "Bangkok  [BKK] - Bangkok", "Bangkok");
 
         searchGDS(flightApi,requestBody);
         searchSTS(flightApi,requestBody);

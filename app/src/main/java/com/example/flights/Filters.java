@@ -24,8 +24,8 @@ import java.util.Iterator;
 public class Filters extends AppCompatActivity {
 
     private static final String TAG = "project";
-    int stopCount=-1,filterCount=0;
-    String depRange="",fromto="from",departureDate="",returnDate="";
+    int stopCount=-1,filterCount=0,stopcountTemp=-1;
+    String depRange="",fromto="from",departureDate="",returnDate="",depTimeTemp="";
     TextView from,to,clear,count,maxprice,minprice;
     LinearLayout zerostop,onestop,twostop,btnDep1,btnDep2,btnDep3,btnDep4;
     ArrayList<ArrayList<OneItinerary>> oneway,newoneway;
@@ -127,6 +127,8 @@ public class Filters extends AppCompatActivity {
 
                 stopCount=-1;
                 depRange="";
+                newoneway=oneway;
+                newreturnway=returnway;
             }
         });
 
@@ -135,6 +137,7 @@ public class Filters extends AppCompatActivity {
     }
 
     public void onclick(){
+
 
         from=findViewById(R.id.from);
         to=findViewById(R.id.to);
@@ -174,7 +177,7 @@ public class Filters extends AppCompatActivity {
                 twostop.setBackground(getResources().getDrawable(R.drawable.roundcorner_grey));
                 stopCount=1;
                 filterCount=1;
-                filterByStopCount(stopCount);
+                filterByStopCount();
 
             }
         });
@@ -186,7 +189,7 @@ public class Filters extends AppCompatActivity {
                 twostop.setBackground(getResources().getDrawable(R.drawable.roundcorner_grey));
                 stopCount=2;
                 filterCount=1;
-                filterByStopCount(stopCount);
+                filterByStopCount();
             }
         });
         twostop.setOnClickListener(new View.OnClickListener() {
@@ -197,7 +200,7 @@ public class Filters extends AppCompatActivity {
                 twostop.setBackground(getResources().getDrawable(R.drawable.roundcorner_red));
                 stopCount=3;
                 filterCount=1;
-                filterByStopCount(stopCount);
+                filterByStopCount();
             }
         });
 
@@ -205,48 +208,48 @@ public class Filters extends AppCompatActivity {
         btnDep1.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                filterCount=2;
                 btnDep1.setBackground(getResources().getDrawable(R.drawable.roundcorner_red));
                 btnDep2.setBackground(getResources().getDrawable(R.drawable.roundcorner_grey));
                 btnDep3.setBackground(getResources().getDrawable(R.drawable.roundcorner_grey));
                 btnDep4.setBackground(getResources().getDrawable(R.drawable.roundcorner_grey));
                 depRange="Before6am";
-                filterCount=2;
                 filterDepTime();
             }
         });
         btnDep2.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                filterCount=2;
                 btnDep1.setBackground(getResources().getDrawable(R.drawable.roundcorner_grey));
                 btnDep2.setBackground(getResources().getDrawable(R.drawable.roundcorner_red));
                 btnDep3.setBackground(getResources().getDrawable(R.drawable.roundcorner_grey));
                 btnDep4.setBackground(getResources().getDrawable(R.drawable.roundcorner_grey));
                 depRange="6amTo12pm";
-                filterCount=2;
                 filterDepTime();
             }
         });
         btnDep3.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                filterCount=2;
                 btnDep1.setBackground(getResources().getDrawable(R.drawable.roundcorner_grey));
                 btnDep2.setBackground(getResources().getDrawable(R.drawable.roundcorner_grey));
                 btnDep3.setBackground(getResources().getDrawable(R.drawable.roundcorner_red));
                 btnDep4.setBackground(getResources().getDrawable(R.drawable.roundcorner_grey));
                 depRange="12pmTo6pm";
-                filterCount=2;
                 filterDepTime();
             }
         });
         btnDep4.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                filterCount=2;
                 btnDep1.setBackground(getResources().getDrawable(R.drawable.roundcorner_grey));
                 btnDep2.setBackground(getResources().getDrawable(R.drawable.roundcorner_grey));
                 btnDep3.setBackground(getResources().getDrawable(R.drawable.roundcorner_grey));
                 btnDep4.setBackground(getResources().getDrawable(R.drawable.roundcorner_red));
                 depRange="After6pm";
-                filterCount=2;
                 filterDepTime();
             }
         });
@@ -264,15 +267,31 @@ public class Filters extends AppCompatActivity {
             }
         }
 
-        Log.d(TAG, "updateDataOnSliderChanger: "+newoneway.size());
+//        Log.d(TAG, "updateDataOnSliderChanger: "+newoneway.size());
     }
 
 
 
-    public void filterByStopCount(int stopCount){
+    public void filterByStopCount(){
+        Log.d(TAG, "fsc: "+newoneway.size()+" "+newreturnway.size());
         int i=0;
-        if(filterCount==1)
+        if(filterCount==1 && depTimeTemp=="") {
             updateDataOnSliderChanger(sliderPrice);
+            Log.d(TAG, " fsc ");
+        }
+
+        if(stopcountTemp==-1) {
+            stopcountTemp = stopCount;
+            Log.d(TAG, "fsc stt c");
+        }
+
+        if(depTimeTemp!=depRange) {
+            filterDepTime();
+            Log.d(TAG, "fsc dtt c");
+        }
+
+        Log.d(TAG, "filterDepTime: sct"+stopcountTemp+" sc "+stopCount+" dtt "+depTimeTemp+" dt "+depRange+" fc "+filterCount);
+
 
         ArrayList<Integer> index=new ArrayList<>();
         if(fromto=="from"){
@@ -310,80 +329,152 @@ public class Filters extends AppCompatActivity {
             }
         }
 
-        stopCountFilter(index);
+        removeByStopCountFilter(index);
 
-        count.setText(newoneway.size()+" "+oneway.size());
         Log.d(TAG, "count "+newoneway.size()+ " "+newreturnway.size());
     }
 
-    public void stopCountFilter(ArrayList<Integer> indexesToRemove){
+    public void removeByStopCountFilter(ArrayList<Integer> indexesToRemove){
 
         Collections.reverse(indexesToRemove);
         for (Integer indexToRemove : indexesToRemove) {
             newoneway.remove((int)indexToRemove);
             newreturnway.remove((int)indexToRemove);
         }
+        count.setText(newoneway.size()+" "+oneway.size());
     }
 
 
-    public int filterDepTime(){
-        int c=0;
-        if(filterCount==2)
+    public void filterDepTime(){
+
+        Log.d(TAG, "fdt: "+newoneway.size()+" "+newreturnway.size());
+
+        if(filterCount==2 && stopcountTemp==-1) {
             updateDataOnSliderChanger(sliderPrice);
+            Log.d(TAG, "fdt");
+        }
+
+        if(depTimeTemp=="") {
+            depTimeTemp = depRange;
+            Log.d(TAG, "fdt dtt c");
+        }
+
+
+        if(stopcountTemp!=stopCount) {
+            filterByStopCount();
+            Log.d(TAG, "fdt sct c");
+        }
+
+        Log.d(TAG, "filterDepTime: sct"+stopcountTemp+" sc "+stopCount+" dtt "+depTimeTemp+" dt "+depRange+" fc "+filterCount);
+
+        ArrayList index=new ArrayList();
 
         if(fromto=="from"){
+            int c=0;
             if(depRange=="Before6am"){
                 Date endDate = new Date(departureDate+" 06:00:00");
                 for(ArrayList<OneItinerary> one : newoneway){
-
+                    if(!filterDate(stringToDate(one.get(0).getDepartureDateTime()),null,endDate)){
+                        index.add(c);
+                    }
+                    c++;
                 }
             }
             else if(depRange=="6amTo12pm"){
                 Date startDate = new Date(departureDate+" 06:00:00");
                 Date endDate = new Date(departureDate+" 12:00:00");
+                for(ArrayList<OneItinerary> one : newoneway){
+                    if(!filterDate(stringToDate(one.get(0).getDepartureDateTime()),startDate,endDate)){
+                        index.add(c);
+                    }
+                    c++;
+                }
             }
             else if(depRange=="12pmTo6pm"){
                 Date startDate = new Date(departureDate+" 12:00:00");
                 Date endDate = new Date(departureDate+" 18:00:00");
+                for(ArrayList<OneItinerary> one : newoneway){
+                    if(!filterDate(stringToDate(one.get(0).getDepartureDateTime()),startDate,endDate)){
+                        index.add(c);
+                    }
+                    c++;
+                }
             }
             else if(depRange=="After6pm"){
                 Date startDate = new Date(departureDate+" 18:00:00");
+                for(ArrayList<OneItinerary> one : newoneway){
+                    if(!filterDate(stringToDate(one.get(0).getDepartureDateTime()),startDate,null)){
+                        index.add(c);
+                    }
+                    c++;
+                }
             }
 
-            count.setText(newoneway.size()+" "+oneway.size());
         }
         else if(fromto=="to"){
-            Log.d(TAG, "filterDepTime: "+fromto);
+            int c=0;
             if(depRange=="Before6am"){
                 Date endDate = new Date(returnDate+" 06:00:00");
+                for(ArrayList<ReturnItinerary> one : newreturnway){
+                    if(!filterDate(stringToDate(one.get(0).getDepartureDateTime()),null,endDate)){
+                        index.add(c);
+                    }
+                    c++;
+                }
             }
             else if(depRange=="6amTo12pm"){
                 Date startDate = new Date(returnDate+" 06:00:00");
                 Date endDate = new Date(returnDate+" 12:00:00");
+
+                for(ArrayList<ReturnItinerary> one : newreturnway){
+                    if(!filterDate(stringToDate(one.get(0).getDepartureDateTime()),startDate,endDate)){
+                        index.add(c);
+                    }
+                    c++;
+                }
+
             }
             else if(depRange=="12pmTo6pm"){
                 Date startDate = new Date(returnDate+" 12:00:00");
                 Date endDate = new Date(returnDate+" 18:00:00");
+
+                for(ArrayList<ReturnItinerary> one : newreturnway){
+                    if(!filterDate(stringToDate(one.get(0).getDepartureDateTime()),startDate,endDate)){
+                        index.add(c);
+                    }
+                    c++;
+                }
             }
             else if(depRange=="After6pm"){
                 Date startDate = new Date(returnDate+" 18:00:00");
-            }
 
-            count.setText(newoneway.size()+" "+oneway.size());
+                for(ArrayList<ReturnItinerary> one : newreturnway){
+                    if(!filterDate(stringToDate(one.get(0).getDepartureDateTime()),startDate,null)){
+                        index.add(c);
+                    }
+                    c++;
+                }
+            }
         }
 
+        removeByDepTimeFilter(index);
 
-        Log.d(TAG, "filterDepTime: "+c+" ** "+newoneway.size());
+        Log.d(TAG, "count "+newoneway.size()+ " "+newreturnway.size());
 
+    }
 
-        return -1;
+    public void removeByDepTimeFilter(ArrayList<Integer> indexesToRemove){
+        Collections.reverse(indexesToRemove);
+        for (Integer indexToRemove : indexesToRemove) {
+            newoneway.remove((int)indexToRemove);
+            newreturnway.remove((int)indexToRemove);
+        }
+        count.setText(newoneway.size()+" "+oneway.size());
     }
 
     public boolean filterDate(Date oneDate, Date startDate, Date endDate){
-        Log.d(TAG, "filterDate: "+oneDate+" "+startDate+" "+endDate);
         if(startDate==null){
             if(oneDate.before(endDate)){
-                Log.d(TAG, "c: ");
                 return true;
             }
         }
@@ -400,18 +491,6 @@ public class Filters extends AppCompatActivity {
         return false;
     }
 
-//    public boolean totalPrice(String price){
-//        Float totalprice=Float.parseFloat(price);
-//
-//        if(slider.getValue()>0){
-//            if(totalprice<slider.getValue()){
-//                return true;
-//            }
-//        }else {
-//            return true;
-//        }
-//        return false;
-//    }
 
     public Date stringToDate(String date){
         SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm");
