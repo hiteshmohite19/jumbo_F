@@ -329,6 +329,7 @@ public class Filters extends AppCompatActivity {
             }
         }
 
+        depTimeTemp="";
         removeByStopCountFilter(index);
 
         Log.d(TAG, "count "+newoneway.size()+ " "+newreturnway.size());
@@ -359,11 +360,19 @@ public class Filters extends AppCompatActivity {
             Log.d(TAG, "fdt dtt c");
         }
 
-
+//        Log.d(TAG, "filterDepTime: "+stopcountTemp+" "+stopCount);
         if(stopcountTemp!=stopCount) {
             filterByStopCount();
             Log.d(TAG, "fdt sct c");
         }
+
+        Log.d(TAG, "filterDepTime: "+stopcountTemp+" "+stopCount);
+//        Log.d(TAG, "check "+depTimeTemp+" "+depRange);
+//        if(depTimeTemp!=depRange) {
+//            Log.d(TAG, " "+depTimeTemp+" "+depRange);
+//            filterByStopCount();
+//            Log.d(TAG, "fsc dtt c");
+//        }
 
         Log.d(TAG, "filterDepTime: sct"+stopcountTemp+" sc "+stopCount+" dtt "+depTimeTemp+" dt "+depRange+" fc "+filterCount);
 
@@ -456,7 +465,7 @@ public class Filters extends AppCompatActivity {
                 }
             }
         }
-
+        stopcountTemp=-1;
         removeByDepTimeFilter(index);
 
         Log.d(TAG, "count "+newoneway.size()+ " "+newreturnway.size());
