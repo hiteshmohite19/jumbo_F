@@ -101,13 +101,19 @@ public class Filters extends AppCompatActivity {
             }
         });
 
-
         slider.addOnChangeListener(new Slider.OnChangeListener() {
             @Override
             public void onValueChange(@NonNull Slider slider, float value, boolean fromUser) {
                 Log.d(TAG, "onValueChange: "+value);
+
+
+                if(sliderPrice!=0.0f && sliderPrice!=value){
+                    filterByStopCount();
+                    filterDepTime();
+                }
+
+                updateDataOnSliderChanger(value);
                 sliderPrice=value;
-                updateDataOnSliderChanger(sliderPrice);
             }
         });
 
@@ -177,7 +183,11 @@ public class Filters extends AppCompatActivity {
                 twostop.setBackground(getResources().getDrawable(R.drawable.roundcorner_grey));
                 stopCount=1;
                 filterCount=1;
-                filterByStopCount();
+
+                if(depRange!="")
+                    ifBothClicked();
+                else
+                    ifStopCountClicked();
 
             }
         });
@@ -189,7 +199,12 @@ public class Filters extends AppCompatActivity {
                 twostop.setBackground(getResources().getDrawable(R.drawable.roundcorner_grey));
                 stopCount=2;
                 filterCount=1;
-                filterByStopCount();
+
+                if(depRange!="")
+                    ifBothClicked();
+                else
+                    ifStopCountClicked();
+
             }
         });
         twostop.setOnClickListener(new View.OnClickListener() {
@@ -200,7 +215,12 @@ public class Filters extends AppCompatActivity {
                 twostop.setBackground(getResources().getDrawable(R.drawable.roundcorner_red));
                 stopCount=3;
                 filterCount=1;
-                filterByStopCount();
+
+                if(depRange!="")
+                    ifBothClicked();
+                else
+                    ifStopCountClicked();
+
             }
         });
 
@@ -214,19 +234,29 @@ public class Filters extends AppCompatActivity {
                 btnDep3.setBackground(getResources().getDrawable(R.drawable.roundcorner_grey));
                 btnDep4.setBackground(getResources().getDrawable(R.drawable.roundcorner_grey));
                 depRange="Before6am";
-                filterDepTime();
+
+                if(stopCount!=0){
+                    ifBothClicked();
+                }else
+                    ifDepRangeClicked();
+
             }
         });
         btnDep2.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                filterCount=2;
+                filterCount = 2;
                 btnDep1.setBackground(getResources().getDrawable(R.drawable.roundcorner_grey));
                 btnDep2.setBackground(getResources().getDrawable(R.drawable.roundcorner_red));
                 btnDep3.setBackground(getResources().getDrawable(R.drawable.roundcorner_grey));
                 btnDep4.setBackground(getResources().getDrawable(R.drawable.roundcorner_grey));
-                depRange="6amTo12pm";
-                filterDepTime();
+                depRange = "6amTo12pm";
+
+                if(stopCount!=0){
+                    ifBothClicked();
+                }else
+                    ifDepRangeClicked();
+
             }
         });
         btnDep3.setOnClickListener(new View.OnClickListener() {
@@ -238,7 +268,12 @@ public class Filters extends AppCompatActivity {
                 btnDep3.setBackground(getResources().getDrawable(R.drawable.roundcorner_red));
                 btnDep4.setBackground(getResources().getDrawable(R.drawable.roundcorner_grey));
                 depRange="12pmTo6pm";
-                filterDepTime();
+
+                if(stopCount!=0){
+                    ifBothClicked();
+                }else
+                    ifDepRangeClicked();
+
             }
         });
         btnDep4.setOnClickListener(new View.OnClickListener() {
@@ -250,7 +285,13 @@ public class Filters extends AppCompatActivity {
                 btnDep3.setBackground(getResources().getDrawable(R.drawable.roundcorner_grey));
                 btnDep4.setBackground(getResources().getDrawable(R.drawable.roundcorner_red));
                 depRange="After6pm";
-                filterDepTime();
+
+                if(stopCount!=0){
+                    ifBothClicked();
+                }else
+                    ifDepRangeClicked();
+
+
             }
         });
     }
@@ -267,31 +308,28 @@ public class Filters extends AppCompatActivity {
             }
         }
 
-//        Log.d(TAG, "updateDataOnSliderChanger: "+newoneway.size());
     }
 
+    public void ifStopCountClicked(){
+        updateDataOnSliderChanger(sliderPrice);
+        filterByStopCount();
+    }
+
+    public void ifDepRangeClicked(){
+        updateDataOnSliderChanger(sliderPrice);
+        filterDepTime();
+    }
+
+    public void ifBothClicked(){
+        updateDataOnSliderChanger(sliderPrice);
+        filterByStopCount();
+        filterDepTime();
+    }
 
 
     public void filterByStopCount(){
         Log.d(TAG, "fsc: "+newoneway.size()+" "+newreturnway.size());
         int i=0;
-        if(filterCount==1 && depTimeTemp=="") {
-            updateDataOnSliderChanger(sliderPrice);
-            Log.d(TAG, " fsc ");
-        }
-
-        if(stopcountTemp==-1) {
-            stopcountTemp = stopCount;
-            Log.d(TAG, "fsc stt c");
-        }
-
-        if(depTimeTemp!=depRange) {
-            filterDepTime();
-            Log.d(TAG, "fsc dtt c");
-        }
-
-        Log.d(TAG, "filterDepTime: sct"+stopcountTemp+" sc "+stopCount+" dtt "+depTimeTemp+" dt "+depRange+" fc "+filterCount);
-
 
         ArrayList<Integer> index=new ArrayList<>();
         if(fromto=="from"){
@@ -329,7 +367,6 @@ public class Filters extends AppCompatActivity {
             }
         }
 
-        depTimeTemp="";
         removeByStopCountFilter(index);
 
         Log.d(TAG, "count "+newoneway.size()+ " "+newreturnway.size());
@@ -348,33 +385,13 @@ public class Filters extends AppCompatActivity {
 
     public void filterDepTime(){
 
-        Log.d(TAG, "fdt: "+newoneway.size()+" "+newreturnway.size());
+        Log.d(TAG, "fdt: "+newoneway.size()+" "+newreturnway.size()+" * +"+depRange);
 
-        if(filterCount==2 && stopcountTemp==-1) {
+        if(filterCount==2 && depRange!="" && stopCount==0) {
             updateDataOnSliderChanger(sliderPrice);
+            depRange="";
             Log.d(TAG, "fdt");
         }
-
-        if(depTimeTemp=="") {
-            depTimeTemp = depRange;
-            Log.d(TAG, "fdt dtt c");
-        }
-
-//        Log.d(TAG, "filterDepTime: "+stopcountTemp+" "+stopCount);
-        if(stopcountTemp!=stopCount) {
-            filterByStopCount();
-            Log.d(TAG, "fdt sct c");
-        }
-
-        Log.d(TAG, "filterDepTime: "+stopcountTemp+" "+stopCount);
-//        Log.d(TAG, "check "+depTimeTemp+" "+depRange);
-//        if(depTimeTemp!=depRange) {
-//            Log.d(TAG, " "+depTimeTemp+" "+depRange);
-//            filterByStopCount();
-//            Log.d(TAG, "fsc dtt c");
-//        }
-
-        Log.d(TAG, "filterDepTime: sct"+stopcountTemp+" sc "+stopCount+" dtt "+depTimeTemp+" dt "+depRange+" fc "+filterCount);
 
         ArrayList index=new ArrayList();
 
@@ -465,7 +482,6 @@ public class Filters extends AppCompatActivity {
                 }
             }
         }
-        stopcountTemp=-1;
         removeByDepTimeFilter(index);
 
         Log.d(TAG, "count "+newoneway.size()+ " "+newreturnway.size());
@@ -508,15 +524,10 @@ public class Filters extends AppCompatActivity {
             Date d=formatter.parse(date);
             calendar.setTime(d);
 
-//            Log.d(TAG, "stringToDate: "+d);
             return calendar.getTime();
         }catch (Exception e){
             Log.d(TAG, "stringToDate: "+e.getMessage());
         }
         return null;
     }
-
-//    public int intComparator(int num1,int num2){
-//
-//    }
 }
