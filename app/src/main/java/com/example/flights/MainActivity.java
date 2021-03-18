@@ -41,40 +41,56 @@ public class MainActivity extends AppCompatActivity {
     private static final String TAG = "project";
     private static final String base_url = "http://b2cmobile.parikshan.net/api/";
     RecyclerAdapter adapter;
-    ArrayList<ArrayList<OneItinerary>> oneway;
-    ArrayList<ArrayList<ReturnItinerary>> returnway;
+    ArrayList<ArrayList<OneItinerary>> oneway,newoneway;
+    ArrayList<ArrayList<ReturnItinerary>> returnway,newreturnway;
     ArrayList<JourneyOneWay> journeyOneWays;
     ArrayList<JourneyReturn> journeyReturns;
     ArrayList<OneItinerary> oneItineraries;
     ArrayList<ReturnItinerary> returnItineraries;
     RequestBody requestBody;
     Bundle bundle;
-    String depTimeRange="",fromto="";
-    int stopCount=-1,count=0;
+
+    String fromto="",deprange="";
+    int stopcount = -1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        recyclerView = findViewById(R.id.recyclerView);
         bundle=getIntent().getExtras();
 
         oneway = new ArrayList<>();
         returnway = new ArrayList<>();
+
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
 
-        getAPIData();
-    }
+        Log.d(TAG, "onCreate: "+bundle);
+        if(bundle!=null){
+            newoneway=new ArrayList<>();
+            newreturnway=new ArrayList<>();
+            newoneway = (ArrayList<ArrayList<OneItinerary>>) getIntent().getSerializableExtra("newoneway");
+            newreturnway= (ArrayList<ArrayList<ReturnItinerary>>) getIntent().getSerializableExtra("newreturnway");
+            oneway = (ArrayList<ArrayList<OneItinerary>>) getIntent().getSerializableExtra("oneway");
+            returnway= (ArrayList<ArrayList<ReturnItinerary>>) getIntent().getSerializableExtra("returnway");
+            stopcount=getIntent().getIntExtra("stopcount",-1);
+            deprange=getIntent().getStringExtra("deprange");
+            fromto=getIntent().getStringExtra("fromto");
 
-    @Override
-    protected void onResume() {
-        super.onResume();
+            LinearLayoutManager linearLayoutManager = new LinearLayoutManager(MainActivity.this);
+            linearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
+            recyclerView.setLayoutManager(linearLayoutManager);
+            recyclerView.setAdapter(new RecyclerAdapter(newoneway, newreturnway));
+        }
+        else{
+            getAPIData();
+        }
 
-        recyclerView = findViewById(R.id.recyclerView);
         ImageView filter=findViewById(R.id.filter);
 
         onclick();
@@ -83,6 +99,10 @@ public class MainActivity extends AppCompatActivity {
         filter.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
+                if(bundle!=null)
+                    getAPIData();
+                Log.d(TAG, "onClick: "+oneway.size()+" "+returnway.size());
 
                 float minPrice = 0,maxPice = 0;
                 Log.d(TAG, "onClick: "+oneway.size());
@@ -97,12 +117,23 @@ public class MainActivity extends AppCompatActivity {
                 bundle1.putFloat("maxPrice",maxPice);
                 bundle1.putString("departureDate",requestBody.getDepDate());
                 bundle1.putString("returnDate",requestBody.getReturnDate());
+                bundle1.putSerializable("stopcount",stopcount);
+                bundle1.putSerializable("depRange",deprange);
+                bundle1.putSerializable("fromto",fromto);
 
                 Intent intent = new Intent(MainActivity.this, Filters.class);
                 intent.putExtras(bundle1);
                 startActivity(intent);
             }
         });
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+
+
 
 
     }
@@ -137,6 +168,10 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void searchGDS(FlightApi flightApi,RequestBody requestBody){
+
+        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(MainActivity.this);
+        linearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
+
         Call<FlightDetails> call = flightApi.Search_GDS(requestBody);
 
         call.enqueue(new Callback<FlightDetails>() {
@@ -161,8 +196,7 @@ public class MainActivity extends AppCompatActivity {
                         returnway.add(returnItineraries);
                     }
                     Log.d(TAG, "onResponse: "+oneway);
-                    LinearLayoutManager linearLayoutManager = new LinearLayoutManager(MainActivity.this);
-                    linearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
+
                     recyclerView.setLayoutManager(linearLayoutManager);
                     recyclerView.setAdapter(new RecyclerAdapter(oneway, returnway));
                 }
@@ -314,20 +348,31 @@ public class MainActivity extends AppCompatActivity {
         cheapest = findViewById(R.id.cheapest);
         fastest = findViewById(R.id.fastest);
 
-        earliest.setOnClickListener(new View.OnClickListener()   {
+        earliest.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                sortBy("earliest");
+                ArrayList<ArrayList<OneItinerary>> one = new ArrayList<>();
+                if (bundle != null)
+                    one = newoneway;
+                else
+                    one=oneway;
+                sortBy("earliest", one);
                 earliest.setTextColor(Color.parseColor("#FF000000"));
                 cheapest.setTextColor(Color.parseColor("#D3D3D3"));
                 fastest.setTextColor(Color.parseColor("#D3D3D3"));
             }
         });
 
+
         cheapest.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                sortBy("cheapest");
+                ArrayList<ArrayList<OneItinerary>> one = new ArrayList<>();
+                if (bundle != null)
+                    one = newoneway;
+                else
+                    one=oneway;
+                sortBy("cheapest", one);
                 earliest.setTextColor(Color.parseColor("#D3D3D3"));
                 cheapest.setTextColor(Color.parseColor("#FF000000"));
                 fastest.setTextColor(Color.parseColor("#D3D3D3"));
@@ -337,17 +382,22 @@ public class MainActivity extends AppCompatActivity {
         fastest.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                sortBy("fastest");
+                ArrayList<ArrayList<OneItinerary>> one = new ArrayList<>();
+                if (bundle != null)
+                    one = newoneway;
+                else
+                    one=oneway;
+                sortBy("fastest", one);
                 earliest.setTextColor(Color.parseColor("#D3D3D3"));
                 cheapest.setTextColor(Color.parseColor("#D3D3D3"));
                 fastest.setTextColor(Color.parseColor("#FF000000"));
             }
         });
-
     }
 
 
-    public void sortBy(String sort) {
+    public void sortBy(String sort,ArrayList<ArrayList<OneItinerary>> oneway) {
+
 
         if (sort == "earliest") {
             Log.d(TAG, "sortBy: earliest");
@@ -360,7 +410,6 @@ public class MainActivity extends AppCompatActivity {
                     return dep1.compareTo(dep2);
                 }
             });
-            adapter.notifyDataSetChanged();
         }
 
         else if (sort == "cheapest") {
@@ -372,7 +421,6 @@ public class MainActivity extends AppCompatActivity {
                     return ((Float)Float.parseFloat(dep1)).compareTo((Float)Float.parseFloat(dep2));
                 }
             });
-            adapter.notifyDataSetChanged();
         }
         else if (sort == "fastest") {
 
@@ -407,18 +455,16 @@ public class MainActivity extends AppCompatActivity {
                     return d1.compareTo(d2);
                 }
             });
-            adapter.notifyDataSetChanged();
-
         }
-
-//        Log.d(TAG, "sortBy: " + " " + oneway.size() + oneway + " " + oneway.size());
-//        for (ArrayList<OneItinerary> one : oneway) {
-//            Log.d(TAG, "sortBy: " +" ** "+ one);
-//        }
-//        for (ArrayList<ReturnItinerary> ret : returnway) {
-//            Log.d(TAG, "sortBy: " +" ** "+ ret);
-//        }
-
+        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(MainActivity.this);
+        linearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
+        if(bundle!=null){
+            Log.d(TAG, "sortBy: bundle values");
+            adapter = new RecyclerAdapter(newoneway, newreturnway);
+        }else
+            adapter = new RecyclerAdapter(oneway, returnway);
+        recyclerView.setAdapter(adapter);
+        adapter.notifyDataSetChanged();
     }
 
     public Date stringToDate(String date){

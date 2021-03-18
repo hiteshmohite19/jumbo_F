@@ -24,8 +24,8 @@ import java.util.Iterator;
 public class Filters extends AppCompatActivity {
 
     private static final String TAG = "project";
-    int stopCount=-1,filterCount=0,stopcountTemp=-1;
-    String depRange="",fromto="from",departureDate="",returnDate="",depTimeTemp="";
+    int stopCount=-1,filterCount=0;
+    String depRange="",fromto="from",departureDate="",returnDate="";
     TextView from,to,clear,count,maxprice,minprice;
     LinearLayout zerostop,onestop,twostop,btnDep1,btnDep2,btnDep3,btnDep4;
     ArrayList<ArrayList<OneItinerary>> oneway,newoneway;
@@ -37,6 +37,7 @@ public class Filters extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_filters);
 
@@ -53,7 +54,7 @@ public class Filters extends AppCompatActivity {
 
         try{
             oneway = (ArrayList<ArrayList<OneItinerary>>) getIntent().getSerializableExtra("oneway");
-            returnway= (ArrayList<ArrayList<ReturnItinerary>>) getIntent().getSerializableExtra("returnway");;
+            returnway= (ArrayList<ArrayList<ReturnItinerary>>) getIntent().getSerializableExtra("returnway");
             newoneway = (ArrayList<ArrayList<OneItinerary>>) getIntent().getSerializableExtra("oneway");
             newreturnway= (ArrayList<ArrayList<ReturnItinerary>>) getIntent().getSerializableExtra("returnway");
             departureDate=b.getString("departureDate");
@@ -91,8 +92,14 @@ public class Filters extends AppCompatActivity {
             public void onClick(View v) {
                 Log.d(TAG, "onClick: ");
                 Bundle bundle1=new Bundle();
-                bundle1.putSerializable("oneway",newoneway);
-                bundle1.putSerializable("returnway",newreturnway);
+                Log.d(TAG, "onClick: "+newoneway+" "+newreturnway);
+                bundle1.putSerializable("newoneway",newoneway);
+                bundle1.putSerializable("newreturnway",newreturnway);
+                bundle1.putSerializable("oneway",oneway);
+                bundle1.putSerializable("returnway",returnway);
+                bundle1.putSerializable("stopcount",stopCount);
+                bundle1.putSerializable("depRange",depRange);
+                bundle1.putSerializable("fromto",fromto);
 
                 Intent intent = new Intent(getApplicationContext(), MainActivity.class);
                 intent.putExtras(bundle1);
@@ -329,50 +336,45 @@ public class Filters extends AppCompatActivity {
 
     public void filterByStopCount(){
         Log.d(TAG, "fsc: "+newoneway.size()+" "+newreturnway.size());
-        int i=0;
 
-        ArrayList<Integer> index=new ArrayList<>();
+        ArrayList index=new ArrayList();
         if(fromto=="from"){
-            for(ArrayList<OneItinerary> one : newoneway){
-
-                if(stopCount==1 && one.size()!=1){
-                    index.add(i);
-                    i++;
+            for(int j=0;j<newoneway.size();j++){
+                if(stopCount==1 && !(newoneway.get(j).size()==1)){
+                    Log.d(TAG, "filterByStopCount: "+newoneway.get(j).size());
+                    index.add(j);
                 }
-                else if(stopCount==2 && one.size()!=2){
-                    index.add(i);
-                    i++;
+                else if(stopCount==2 && !(newoneway.get(j).size()==2)){
+                    Log.d(TAG, "filterByStopCount: "+newoneway.get(j).size());
+                    index.add(j);
                 }
-                else if(stopCount>2 && !(one.size()>2)){
-                    index.add(i);
-                    i++;
+                else if(stopCount>2 && !(newoneway.get(j).size()>2)){
+                    Log.d(TAG, "filterByStopCount: "+newoneway.get(j).size());
+                    index.add(j);
                 }
             }
         }
         else if(fromto=="to"){
-            for(ArrayList<ReturnItinerary> one : newreturnway){
+            for(int i=0;i<newoneway.size();i++){
 
-                if(stopCount==1 && one.size()!=1){
+                if(stopCount==1 && newoneway.get(i).size()==1){
                     index.add(i);
-                    i++;
                 }
-                else if(stopCount==2 && one.size()!=2){
+                else if(stopCount==2 && newoneway.get(i).size()==2){
                     index.add(i);
-                    i++;
                 }
-                else if(stopCount>2 && !(one.size()>2)){
+                else if(stopCount>2 && newoneway.get(i).size()>2){
                     index.add(i);
-                    i++;
                 }
             }
         }
 
         removeByStopCountFilter(index);
-
-        Log.d(TAG, "count "+newoneway.size()+ " "+newreturnway.size());
+        Log.d(TAG, "count "+newoneway.size()+ " "+newreturnway.size()+" "+index);
     }
 
     public void removeByStopCountFilter(ArrayList<Integer> indexesToRemove){
+        Log.d(TAG, "removeByStopCountFilter: "+indexesToRemove.size()+" "+indexesToRemove);
 
         Collections.reverse(indexesToRemove);
         for (Integer indexToRemove : indexesToRemove) {

@@ -35,7 +35,7 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHo
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-
+        Log.d(TAG, "onBindViewHolder: "+oneway.size()+" "+returnway.size());
         dataBind(holder,position);
 
     }
@@ -70,8 +70,8 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHo
 
 
         ArrayList<ReturnItinerary> ret= returnway.get(position);
-        int max_count1=one.size();
-        Log.d(TAG, "ret : "+ret);
+        int max_count1=ret.size();
+        Log.d(TAG, "ret : "+ret+" "+max_count1);
 
         holder.RflightName.setText(ret.get(0).getAirlineName());
 
@@ -83,7 +83,7 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHo
         holder.RnumOfFlights.setText(String.valueOf(max_count1));
 
         if(returnway.get(position).size()>1) {
-            holder.RtotalTime.setText(getTotalTime(ret.get(0).getDepartureDateTime(), ret.get(max_count1 - 1).getArrivalDateTime()));
+            holder.RtotalTime.setText(getTotalTime(ret.get(0).getDepartureDateTime(), ret.get(max_count1-1).getArrivalDateTime()));
             holder.RfromTime.setText(ret.get(0).getDepartureDateTime().substring(11,13)+":"+ret.get(max_count1-1).getDepartureDateTime().substring(14,16)+"");
             holder.RtoTime.setText(ret.get(0).getArrivalDateTime().substring(11,13)+":"+ret.get(max_count1-1).getArrivalDateTime().substring(14,16)+"");
             holder.RtotalStop.setText((max_count1-1)+" stop");
