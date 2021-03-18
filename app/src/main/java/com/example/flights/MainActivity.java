@@ -79,8 +79,10 @@ public class MainActivity extends AppCompatActivity {
             oneway = (ArrayList<ArrayList<OneItinerary>>) getIntent().getSerializableExtra("oneway");
             returnway= (ArrayList<ArrayList<ReturnItinerary>>) getIntent().getSerializableExtra("returnway");
             stopcount=getIntent().getIntExtra("stopcount",-1);
-            deprange=getIntent().getStringExtra("deprange");
+            deprange=getIntent().getStringExtra("depRange");
             fromto=getIntent().getStringExtra("fromto");
+
+            Log.d(TAG, "onCreate: "+stopcount+ " "+deprange+" "+fromto);
 
             LinearLayoutManager linearLayoutManager = new LinearLayoutManager(MainActivity.this);
             linearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
@@ -117,9 +119,13 @@ public class MainActivity extends AppCompatActivity {
                 bundle1.putFloat("maxPrice",maxPice);
                 bundle1.putString("departureDate",requestBody.getDepDate());
                 bundle1.putString("returnDate",requestBody.getReturnDate());
-                bundle1.putSerializable("stopcount",stopcount);
-                bundle1.putSerializable("depRange",deprange);
-                bundle1.putSerializable("fromto",fromto);
+                bundle1.putInt("stopcount",stopcount);
+                bundle1.putString("depRange",deprange);
+                bundle1.putString("fromto",fromto);
+                if(bundle!=null)
+                    bundle1.putInt("flightsCount",newoneway.size());
+                else
+                    bundle1.putInt("flightsCount",oneway.size());
 
                 Intent intent = new Intent(MainActivity.this, Filters.class);
                 intent.putExtras(bundle1);
