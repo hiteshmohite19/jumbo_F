@@ -69,43 +69,10 @@
         android:layout_below="@+id/tooltab"
         android:id="@+id/lay1"
         android:background="@color/white">
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:gravity="center"
-            android:orientation="horizontal"
-            android:layout_marginTop="20dp"
-            android:background="@drawable/roundcorner_grey"
-            android:weightSum="2"
-            android:layout_marginHorizontal="50dp"
-            android:id="@+id/switchBar">
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:id="@+id/from"
-                android:padding="10dp"
-                android:layout_weight="1"
-                android:gravity="center"
-                android:background="@drawable/roundcorner_white"
-                android:layout_margin="1dp"
-                android:textSize="20dp"
-                android:text="Del - Bom"/>
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="Bom-Del"
-                android:padding="10dp"
-                android:gravity="center"
-                android:layout_margin="1dp"
-                android:layout_weight="1"
-                android:textSize="20dp"
-                android:id="@+id/to"/>
-        </LinearLayout>
 
         <com.google.android.material.slider.Slider
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/switchBar"
             app:trackColorActive="@color/red"
             android:id="@+id/slider"
             app:thumbColor="@color/red" />
@@ -148,89 +115,200 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:orientation="horizontal"
             android:layout_below="@id/numberOfStops"
-            android:weightSum="3"
-            android:orientation="horizontal">
+            android:id="@+id/fromLayout"
+            android:weightSum="6">
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:gravity="center"
+                android:textSize="17dp"
+                android:layout_weight="5"
+                android:textColor="@color/black"
+                android:text="From"/>
             <LinearLayout
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_margin="10dp"
+                android:layout_below="@id/numberOfStops"
                 android:layout_weight="1"
-                android:id="@+id/zerostop"
-                android:background="@drawable/roundcorner_grey"
-                android:orientation="vertical">
-                <TextView
-                    android:layout_width="match_parent"
+                android:orientation="horizontal">
+                <LinearLayout
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="0"
-                    android:gravity="center"
-                    android:layout_marginTop="5dp"
-                    android:id="@+id/zero1"
-                    android:textColor="@color/black"
-                    android:textSize="19dp"/>
-                <TextView
-                    android:layout_width="match_parent"
+                    android:layout_margin="10dp"
+                    android:id="@+id/fromzerostop"
+                    android:layout_weight="1"
+                    android:background="@drawable/roundcorner_grey"
+                    android:orientation="vertical">
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="0"
+                        android:gravity="center"
+                        android:layout_marginTop="5dp"
+                        android:id="@+id/fromzero1"
+                        android:textColor="@color/black"
+                        android:textSize="19dp"/>
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Non-stop"
+                        android:layout_marginBottom="5dp"
+                        android:textColor="@color/black"
+                        android:gravity="center"
+                        android:textSize="15dp"/>
+                </LinearLayout>
+                <LinearLayout
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Non-stop"
-                    android:id="@+id/zero2"
-                    android:layout_marginBottom="5dp"
-                    android:textColor="@color/black"
-                    android:gravity="center"
-                    android:textSize="15dp"/>
+                    android:layout_margin="10dp"
+                    android:layout_weight="1"
+                    android:id="@+id/fromonestop"
+                    android:background="@drawable/roundcorner_grey"
+                    android:orientation="vertical">
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="1"
+                        android:gravity="center"
+                        android:layout_marginTop="5dp"
+                        android:textColor="@color/black"
+                        android:textSize="19dp"/>
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Non-stop"
+                        android:layout_marginBottom="5dp"
+                        android:textColor="@color/black"
+                        android:gravity="center"
+                        android:textSize="15dp"/>
+                </LinearLayout>
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="10dp"
+                    android:layout_weight="1"
+                    android:id="@+id/fromtwostop"
+                    android:background="@drawable/roundcorner_grey"
+                    android:orientation="vertical">
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="2+"
+                        android:gravity="center"
+                        android:layout_marginTop="5dp"
+                        android:textColor="@color/black"
+                        android:textSize="19dp"/>
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Non-stop"
+                        android:layout_marginBottom="5dp"
+                        android:textColor="@color/black"
+                        android:gravity="center"
+                        android:textSize="15dp"/>
+                </LinearLayout>
             </LinearLayout>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_below="@id/fromLayout"
+            android:id="@+id/toLayout"
+            android:weightSum="6">
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:gravity="center"
+                android:layout_weight="5"
+                android:textSize="17dp"
+                android:textColor="@color/black"
+                android:text="To"/>
             <LinearLayout
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_margin="10dp"
+                android:layout_below="@id/numberOfStops"
+                android:weightSum="3"
                 android:layout_weight="1"
-                android:id="@+id/onestop"
-                android:background="@drawable/roundcorner_grey"
-                android:orientation="vertical">
-                <TextView
-                    android:layout_width="match_parent"
+                android:orientation="horizontal">
+                <LinearLayout
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="1"
-                    android:id="@+id/oneo1"
-                    android:gravity="center"
-                    android:layout_marginTop="5dp"
-                    android:textColor="@color/black"
-                    android:textSize="19dp"/>
-                <TextView
-                    android:layout_width="match_parent"
+                    android:layout_margin="10dp"
+                    android:layout_weight="1"
+                    android:id="@+id/tozerostop"
+                    android:background="@drawable/roundcorner_grey"
+                    android:orientation="vertical">
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="0"
+                        android:gravity="center"
+                        android:layout_marginTop="5dp"
+                        android:textColor="@color/black"
+                        android:textSize="19dp"/>
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Non-stop"
+                        android:layout_marginBottom="5dp"
+                        android:textColor="@color/black"
+                        android:gravity="center"
+                        android:textSize="15dp"/>
+                </LinearLayout>
+                <LinearLayout
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Non-stop"
-                    android:id="@+id/oneo2"
-                    android:layout_marginBottom="5dp"
-                    android:textColor="@color/black"
-                    android:gravity="center"
-                    android:textSize="15dp"/>
-            </LinearLayout>
-            <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_margin="10dp"
-                android:layout_weight="1"
-                android:id="@+id/twostop"
-                android:background="@drawable/roundcorner_grey"
-                android:orientation="vertical">
-                <TextView
-                    android:layout_width="match_parent"
+                    android:layout_margin="10dp"
+                    android:layout_weight="1"
+                    android:id="@+id/toonestop"
+                    android:background="@drawable/roundcorner_grey"
+                    android:orientation="vertical">
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="1"
+                        android:gravity="center"
+                        android:layout_marginTop="5dp"
+                        android:textColor="@color/black"
+                        android:textSize="19dp"/>
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Non-stop"
+                        android:layout_marginBottom="5dp"
+                        android:textColor="@color/black"
+                        android:gravity="center"
+                        android:textSize="15dp"/>
+                </LinearLayout>
+                <LinearLayout
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="2+"
-                    android:gravity="center"
-                    android:id="@+id/two1"
-                    android:layout_marginTop="5dp"
-                    android:textColor="@color/black"
-                    android:textSize="19dp"/>
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="Non-stop"
-                    android:id="@+id/two2"
-                    android:layout_marginBottom="5dp"
-                    android:textColor="@color/black"
-                    android:gravity="center"
-                    android:textSize="15dp"/>
+                    android:layout_margin="10dp"
+                    android:layout_weight="1"
+                    android:id="@+id/totwostop"
+                    android:background="@drawable/roundcorner_grey"
+                    android:orientation="vertical">
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="2+"
+                        android:gravity="center"
+                        android:layout_marginTop="5dp"
+                        android:textColor="@color/black"
+                        android:textSize="19dp"/>
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Non-stop"
+                        android:layout_marginBottom="5dp"
+                        android:textColor="@color/black"
+                        android:gravity="center"
+                        android:textSize="15dp"/>
+                </LinearLayout>
             </LinearLayout>
         </LinearLayout>
     </RelativeLayout>
@@ -254,107 +332,232 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@id/sortDayNight"
-            android:weightSum="4"
+            android:id="@+id/fromdepRange"
+            android:weightSum="10"
             android:orientation="horizontal">
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="9"
+                android:gravity="center"
+                android:textColor="@color/black"
+                android:text="From"/>
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_margin="10dp"
+                android:layout_height="match_parent"
                 android:layout_weight="1"
-                android:id="@+id/btnDep1"
-                android:background="@drawable/roundcorner_grey"
-                android:orientation="vertical">
-                <TextView
+                android:layout_below="@id/sortDayNight"
+                android:weightSum="4"
+                android:orientation="horizontal">
+                <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="Before 6am"
-                    android:gravity="center"
-                    android:id="@+id/dep11"
-                    android:layout_marginTop="5dp"
-                    android:textSize="19dp"/>
-                <TextView
+                    android:layout_margin="10dp"
+                    android:layout_weight="1"
+                    android:id="@+id/frombtnDep1"
+                    android:background="@drawable/roundcorner_grey"
+                    android:orientation="vertical">
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Before 6am"
+                        android:gravity="center"
+                        android:layout_marginTop="5dp"
+                        android:textSize="19dp"/>
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Non-stop"
+                        android:layout_marginBottom="5dp"
+                        android:gravity="center"
+                        android:textSize="15dp"/>
+                </LinearLayout>
+                <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="Non-stop"
-                    android:id="@+id/dep12"
-                    android:layout_marginBottom="5dp"
-                    android:gravity="center"
-                    android:textSize="15dp"/>
+                    android:layout_margin="10dp"
+                    android:layout_weight="1"
+                    android:id="@+id/frombtnDep2"
+                    android:background="@drawable/roundcorner_grey"
+                    android:orientation="vertical">
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="6am to 12 mp"
+                        android:gravity="center"
+                        android:layout_marginTop="5dp"
+                        android:textSize="19dp"/>
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Non-stop"
+                        android:layout_marginBottom="5dp"
+                        android:gravity="center"
+                        android:textSize="15dp"/>
+                </LinearLayout>
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="10dp"
+                    android:layout_weight="1"
+                    android:id="@+id/frombtnDep3"
+                    android:background="@drawable/roundcorner_grey"
+                    android:orientation="vertical">
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="12pm to 6pm"
+                        android:gravity="center"
+                        android:layout_marginTop="5dp"
+                        android:textSize="19dp"/>
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Non-stop"
+                        android:id="@+id/dep32"
+                        android:layout_marginBottom="5dp"
+                        android:gravity="center"
+                        android:textSize="15dp"/>
+                </LinearLayout>
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="10dp"
+                    android:layout_weight="1"
+                    android:id="@+id/frombtnDep4"
+                    android:background="@drawable/roundcorner_grey"
+                    android:orientation="vertical">
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="After 6pm"
+                        android:gravity="center"
+                        android:layout_marginTop="5dp"
+                        android:textSize="19dp"/>
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Non-stop"
+                        android:layout_marginBottom="5dp"
+                        android:gravity="center"
+                        android:textSize="15dp"/>
+                </LinearLayout>
             </LinearLayout>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/fromdepRange"
+            android:id="@+id/todepRange"
+            android:weightSum="10"
+            android:orientation="horizontal">
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="9"
+                android:gravity="center"
+                android:textColor="@color/black"
+                android:text="To"/>
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_margin="10dp"
+                android:layout_height="match_parent"
                 android:layout_weight="1"
-                android:id="@+id/btnDep2"
-                android:background="@drawable/roundcorner_grey"
-                android:orientation="vertical">
-                <TextView
+                android:layout_below="@id/sortDayNight"
+                android:weightSum="4"
+                android:orientation="horizontal">
+                <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="6am to 12 mp"
-                    android:gravity="center"
-                    android:id="@+id/dep21"
-                    android:layout_marginTop="5dp"
-                    android:textSize="19dp"/>
-                <TextView
+                    android:layout_margin="10dp"
+                    android:layout_weight="1"
+                    android:id="@+id/tobtnDep1"
+                    android:background="@drawable/roundcorner_grey"
+                    android:orientation="vertical">
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Before 6am"
+                        android:gravity="center"
+                        android:layout_marginTop="5dp"
+                        android:textSize="19dp"/>
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Non-stop"
+                        android:layout_marginBottom="5dp"
+                        android:gravity="center"
+                        android:textSize="15dp"/>
+                </LinearLayout>
+                <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="Non-stop"
-                    android:id="@+id/dep22"
-                    android:layout_marginBottom="5dp"
-                    android:gravity="center"
-                    android:textSize="15dp"/>
-            </LinearLayout>
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_margin="10dp"
-                android:layout_weight="1"
-                android:id="@+id/btnDep3"
-                android:background="@drawable/roundcorner_grey"
-                android:orientation="vertical">
-                <TextView
+                    android:layout_margin="10dp"
+                    android:layout_weight="1"
+                    android:id="@+id/tobtnDep2"
+                    android:background="@drawable/roundcorner_grey"
+                    android:orientation="vertical">
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="6am to 12 mp"
+                        android:gravity="center"
+                        android:layout_marginTop="5dp"
+                        android:textSize="19dp"/>
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Non-stop"
+                        android:layout_marginBottom="5dp"
+                        android:gravity="center"
+                        android:textSize="15dp"/>
+                </LinearLayout>
+                <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="12pm to 6pm"
-                    android:gravity="center"
-                    android:id="@+id/dep31"
-                    android:layout_marginTop="5dp"
-                    android:textSize="19dp"/>
-                <TextView
+                    android:layout_margin="10dp"
+                    android:layout_weight="1"
+                    android:id="@+id/tobtnDep3"
+                    android:background="@drawable/roundcorner_grey"
+                    android:orientation="vertical">
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="12pm to 6pm"
+                        android:gravity="center"
+                        android:layout_marginTop="5dp"
+                        android:textSize="19dp"/>
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Non-stop"
+                        android:layout_marginBottom="5dp"
+                        android:gravity="center"
+                        android:textSize="15dp"/>
+                </LinearLayout>
+                <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="Non-stop"
-                    android:id="@+id/dep32"
-                    android:layout_marginBottom="5dp"
-                    android:gravity="center"
-                    android:textSize="15dp"/>
-            </LinearLayout>
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_margin="10dp"
-                android:layout_weight="1"
-                android:id="@+id/btnDep4"
-                android:background="@drawable/roundcorner_grey"
-                android:orientation="vertical">
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="After 6pm"
-                    android:id="@+id/dep41"
-                    android:gravity="center"
-                    android:layout_marginTop="5dp"
-                    android:textSize="19dp"/>
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="Non-stop"
-                    android:id="@+id/dep42"
-                    android:layout_marginBottom="5dp"
-                    android:gravity="center"
-                    android:textSize="15dp"/>
+                    android:layout_margin="10dp"
+                    android:layout_weight="1"
+                    android:id="@+id/tobtnDep4"
+                    android:background="@drawable/roundcorner_grey"
+                    android:orientation="vertical">
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="After 6pm"
+                        android:gravity="center"
+                        android:layout_marginTop="5dp"
+                        android:textSize="19dp"/>
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Non-stop"
+                        android:layout_marginBottom="5dp"
+                        android:gravity="center"
+                        android:textSize="15dp"/>
+                </LinearLayout>
             </LinearLayout>
         </LinearLayout>
     </RelativeLayout>

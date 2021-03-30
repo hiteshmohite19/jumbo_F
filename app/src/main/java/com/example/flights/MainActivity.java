@@ -49,6 +49,7 @@ public class MainActivity extends AppCompatActivity {
     ArrayList<ReturnItinerary> returnItineraries;
     RequestBody requestBody;
     Bundle bundle;
+    ArrayList<Float> totalPrice=new ArrayList();
 
     String fromto="",deprange="";
     int stopcount = -1;
@@ -91,7 +92,9 @@ public class MainActivity extends AppCompatActivity {
         }
         else{
             getAPIData();
+
         }
+
 
         ImageView filter=findViewById(R.id.filter);
 
@@ -101,16 +104,15 @@ public class MainActivity extends AppCompatActivity {
         filter.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                getMinMaxPrice();
                 if(bundle!=null)
                     getAPIData();
                 Log.d(TAG, "onClick: "+oneway.size()+" "+returnway.size());
 
                 float minPrice = 0,maxPice = 0;
                 Log.d(TAG, "onClick: "+oneway.size());
-                String values[]=getMinMaxPrice().split(" ");
-                minPrice=Float.parseFloat(values[0]);
-                maxPice=Float.parseFloat(values[1]);
+                minPrice=Float.parseFloat(String.valueOf(totalPrice.get(0)));
+                maxPice=Float.parseFloat(String.valueOf(totalPrice.get((totalPrice.size()-1))));
                 Log.d(TAG, "getAPIData: "+minPrice+" "+maxPice);
                 Bundle bundle1=new Bundle();
                 bundle1.putSerializable("oneway",oneway);
@@ -137,10 +139,6 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
-
-
-
-
 
     }
 
@@ -343,8 +341,9 @@ public class MainActivity extends AppCompatActivity {
                 Log.d(TAG, "onResponse: went wrong " + t);
             }
         });
-    }
 
+
+    }
 
 
     public void onclick() {
@@ -368,7 +367,6 @@ public class MainActivity extends AppCompatActivity {
                 fastest.setTextColor(Color.parseColor("#D3D3D3"));
             }
         });
-
 
         cheapest.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -401,9 +399,7 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
-
     public void sortBy(String sort,ArrayList<ArrayList<OneItinerary>> oneway) {
-
 
         if (sort == "earliest") {
             Log.d(TAG, "sortBy: earliest");
@@ -419,7 +415,11 @@ public class MainActivity extends AppCompatActivity {
         }
 
         else if (sort == "cheapest") {
+
+            
+
             Collections.sort(oneway, new Comparator<ArrayList<OneItinerary>>() {
+
                 @Override
                 public int compare(ArrayList<OneItinerary> o1, ArrayList<OneItinerary> o2) {
                     String dep1=(o1.get(0).getTotalPrice());
@@ -486,28 +486,29 @@ public class MainActivity extends AppCompatActivity {
         return null;
     }
 
-    public String getTotalTime (String departure, String arrival){
-        LocalDateTime dateTime1 = LocalDateTime.parse(departure);
-        LocalDateTime dateTime2 = LocalDateTime.parse(arrival);
+//    public String getTotalTime (String departure, String arrival){
+//        LocalDateTime dateTime1 = LocalDateTime.parse(departure);
+//        LocalDateTime dateTime2 = LocalDateTime.parse(arrival);
+//
+//        Duration duration = Duration.between(dateTime1, dateTime2);
+////        Log.d(TAG, "getTotalTime: " + duration.toHours() + " " + duration.toMillis());
+//
+//        long diffMinutes = (duration.toMillis() / (1000 * 60)) % 60;
+//
+//        return (duration.toHours()) + "h " + (diffMinutes) + "m";
+//    }
 
-        Duration duration = Duration.between(dateTime1, dateTime2);
-//        Log.d(TAG, "getTotalTime: " + duration.toHours() + " " + duration.toMillis());
 
-        long diffMinutes = (duration.toMillis() / (1000 * 60)) % 60;
+    public void getMinMaxPrice(){
 
-        return (duration.toHours()) + "h " + (diffMinutes) + "m";
-    }
+        for(int i=0;i<oneway.size();i++){
+            Log.d(TAG, "getMinMaxPrice: "+Float.parseFloat(oneway.get(i).get(0).getTotalPrice())+" * "+Float.parseFloat(returnway.get(i).get(0).getTotalPrice()));
+            totalPrice.add(Float.parseFloat(oneway.get(i).get(0).getTotalPrice())+Float.parseFloat(returnway.get(i).get(0).getTotalPrice()));
+        }
+        Collections.sort(totalPrice);
 
-    public String getMinMaxPrice(){
-        Collections.sort(oneway, new Comparator<ArrayList<OneItinerary>>() {
-            @Override
-            public int compare(ArrayList<OneItinerary> o1, ArrayList<OneItinerary> o2) {
-                Float dep1=Float.parseFloat(o1.get(0).getTotalPrice());
-                Float dep2=Float.parseFloat(o2.get(0).getTotalPrice());
-                return dep1.compareTo(dep2);
-            }
-        });
-//        Log.d(TAG, "getMinMaxPrice: "+oneway.size());
-        return (oneway.get(0).get(0).getTotalPrice())+" "+oneway.get(oneway.size()-1).get(0).getTotalPrice();
+        Log.d(TAG, "getMinMaxPrice: "+totalPrice.size()+" * "+totalPrice+" * ");
+//        return ("string  "+(totalPrice.size()));
+//        return (oneway.get(0).get(0).getTotalPrice())+" "+oneway.get(oneway.size()-1).get(0).getTotalPrice();
     }
 }

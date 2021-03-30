@@ -25,10 +25,10 @@ import java.util.Iterator;
 public class Filters extends AppCompatActivity {
 
     private static final String TAG = "project";
-    int stopCount=-1,filterCount=0;
-    String depRange="",fromto="from",departureDate="",returnDate="";
-    TextView from,to,clear,count,maxprice,minprice;
-    LinearLayout zerostop,onestop,twostop,btnDep1,btnDep2,btnDep3,btnDep4;
+    int fromStopCount=-1,toStopCount=-1,filterCount=0;
+    String fromDepRange="",toDepRange="",departureDate="",returnDate="";
+    TextView clear,count,maxprice,minprice;
+    LinearLayout fromzerostop,tozerostop,fromonestop,toonestop,fromtwostop,totwostop,frombtnDep1,tobtnDep1,frombtnDep2,tobtnDep2,frombtnDep3,tobtnDep3,frombtnDep4,tobtnDep4;
     ArrayList<ArrayList<OneItinerary>> oneway,newoneway;
     ArrayList<ArrayList<ReturnItinerary>> returnway,newreturnway;
     Button apply;
@@ -55,15 +55,20 @@ public class Filters extends AppCompatActivity {
         minprice=findViewById(R.id.minPrice);
         count=findViewById(R.id.count);
 
-        from=findViewById(R.id.from);
-        to=findViewById(R.id.to);
-        zerostop=findViewById(R.id.zerostop);
-        onestop=findViewById(R.id.onestop);
-        twostop=findViewById(R.id.twostop);
-        btnDep1=findViewById(R.id.btnDep1);
-        btnDep2=findViewById(R.id.btnDep2);
-        btnDep3=findViewById(R.id.btnDep3);
-        btnDep4=findViewById(R.id.btnDep4);
+        fromzerostop=findViewById(R.id.fromzerostop);
+        tozerostop=findViewById(R.id.tozerostop);
+        fromonestop=findViewById(R.id.fromonestop);
+        toonestop=findViewById(R.id.toonestop);
+        fromtwostop=findViewById(R.id.fromtwostop);
+        totwostop=findViewById(R.id.totwostop);
+        frombtnDep1=findViewById(R.id.frombtnDep1);
+        tobtnDep1=findViewById(R.id.tobtnDep1);
+        frombtnDep2=findViewById(R.id.frombtnDep2);
+        tobtnDep2=findViewById(R.id.tobtnDep2);
+        frombtnDep3=findViewById(R.id.frombtnDep3);
+        tobtnDep3=findViewById(R.id.tobtnDep3);
+        frombtnDep4=findViewById(R.id.frombtnDep4);
+        tobtnDep4=findViewById(R.id.tobtnDep4);
 
         try{
             oneway = (ArrayList<ArrayList<OneItinerary>>) getIntent().getSerializableExtra("oneway");
@@ -72,11 +77,11 @@ public class Filters extends AppCompatActivity {
             newreturnway= (ArrayList<ArrayList<ReturnItinerary>>) getIntent().getSerializableExtra("returnway");
             departureDate=b.getString("departureDate");
             returnDate=b.getString("returnDate");
-            stopCount=b.getInt("stopcount");
-            depRange=b.getString("depRange");
+            fromStopCount=b.getInt("stopcount");
+            fromDepRange=b.getString("depRange");
             flightscount=b.getInt("flightsCount");
 
-            Log.d(TAG, "onCreate: "+stopCount+" "+depRange);
+            Log.d(TAG, "onCreate: "+fromStopCount+" "+fromDepRange);
 
             Log.d(TAG, "onCreate: "+departureDate+" "+returnDate);
             minPrice=b.getFloat("minPrice",0.0f);
@@ -97,11 +102,11 @@ public class Filters extends AppCompatActivity {
         }
 
         if(b!=null){
-            if(stopCount!=-1){
-                changeStopCountBtnColor(stopCount);
+            if(fromStopCount!=-1){
+                fromStopCountBtnColor(fromStopCount);
             }
-            if(depRange!=""){
-                changeDepRangeBtnColor(depRange);
+            if(fromDepRange!=""){
+                fromDepRangeBtnColor(fromDepRange);
             }
             count.setText(flightscount+" of "+oneway.size());
         }
@@ -125,9 +130,10 @@ public class Filters extends AppCompatActivity {
                 bundle1.putSerializable("newreturnway",newreturnway);
                 bundle1.putSerializable("oneway",oneway);
                 bundle1.putSerializable("returnway",returnway);
-                bundle1.putInt("stopcount",stopCount);
-                bundle1.putString("depRange",depRange);
-                bundle1.putString("fromto",fromto);
+                bundle1.putInt("stopcount",fromStopCount);
+                bundle1.putString("depRange",fromDepRange);
+                bundle1.putInt("stopcount",toStopCount);
+                bundle1.putString("depRange",fromDepRange);
 
                 Intent intent = new Intent(getApplicationContext(), MainActivity.class);
                 intent.putExtras(bundle1);
@@ -143,8 +149,8 @@ public class Filters extends AppCompatActivity {
 
 
                 if(sliderPrice!=0.0f && sliderPrice!=value){
-                    filterByStopCount();
-                    filterDepTime();
+                    filterByStopCount("from");
+                    filterDepTime("from");
                 }
 
                 updateDataOnSliderChanger(value);
@@ -157,17 +163,28 @@ public class Filters extends AppCompatActivity {
         clear.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View v) {
-                zerostop.setBackground(getResources().getDrawable(R.drawable.roundcorner_grey));
-                onestop.setBackground(getResources().getDrawable(R.drawable.roundcorner_grey));
-                twostop.setBackground(getResources().getDrawable(R.drawable.roundcorner_grey));
+                fromzerostop.setBackground(getResources().getDrawable(R.drawable.roundcorner_grey));
+                fromonestop.setBackground(getResources().getDrawable(R.drawable.roundcorner_grey));
+                fromtwostop.setBackground(getResources().getDrawable(R.drawable.roundcorner_grey));
 
-                btnDep1.setBackground(getResources().getDrawable(R.drawable.roundcorner_grey));
-                btnDep2.setBackground(getResources().getDrawable(R.drawable.roundcorner_grey));
-                btnDep3.setBackground(getResources().getDrawable(R.drawable.roundcorner_grey));
-                btnDep4.setBackground(getResources().getDrawable(R.drawable.roundcorner_grey));
+                tozerostop.setBackground(getResources().getDrawable(R.drawable.roundcorner_grey));
+                toonestop.setBackground(getResources().getDrawable(R.drawable.roundcorner_grey));
+                totwostop.setBackground(getResources().getDrawable(R.drawable.roundcorner_grey));
 
-                stopCount=-1;
-                depRange="";
+                frombtnDep1.setBackground(getResources().getDrawable(R.drawable.roundcorner_grey));
+                frombtnDep2.setBackground(getResources().getDrawable(R.drawable.roundcorner_grey));
+                frombtnDep3.setBackground(getResources().getDrawable(R.drawable.roundcorner_grey));
+                frombtnDep4.setBackground(getResources().getDrawable(R.drawable.roundcorner_grey));
+
+                tobtnDep1.setBackground(getResources().getDrawable(R.drawable.roundcorner_grey));
+                tobtnDep2.setBackground(getResources().getDrawable(R.drawable.roundcorner_grey));
+                tobtnDep3.setBackground(getResources().getDrawable(R.drawable.roundcorner_grey));
+                tobtnDep4.setBackground(getResources().getDrawable(R.drawable.roundcorner_grey));
+
+                fromStopCount=-1;
+                fromDepRange="";
+                toStopCount=-1;
+                toDepRange="";
                 newoneway=oneway;
                 newreturnway=returnway;
             }
@@ -178,174 +195,299 @@ public class Filters extends AppCompatActivity {
     }
 
     public void onclick(){
-
-
-
-
-
-        from.setOnClickListener(new View.OnClickListener() {
+        String from="from",to="to";
+//stop count from time filter
+        fromzerostop.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                from.setBackground(getResources().getDrawable(R.drawable.roundcorner_white));
-                to.setBackground(getResources().getDrawable(R.drawable.roundcorner_grey));
-                fromto="from";
-            }
-        });
-
-        to.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                from.setBackground(getResources().getDrawable(R.drawable.roundcorner_grey));
-                to.setBackground(getResources().getDrawable(R.drawable.roundcorner_white));
-                fromto="to";
-            }
-        });
-
-
-        zerostop.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                stopCount=1;
-                changeStopCountBtnColor(stopCount);
+                fromStopCount=1;
+                fromStopCountBtnColor(fromStopCount);
                 filterCount=1;
 
-                if(depRange!="")
-                    ifBothClicked();
+                if(fromDepRange!="")
+                    ifBothClicked(from);
                 else
-                    ifStopCountClicked();
+                    ifStopCountClicked(from);
 
             }
         });
-        onestop.setOnClickListener(new View.OnClickListener() {
+        fromonestop.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
-                stopCount=2;
-                changeStopCountBtnColor(stopCount);
+                fromStopCount=2;
+                fromStopCountBtnColor(fromStopCount);
                 filterCount=1;
 
-                if(depRange!="")
-                    ifBothClicked();
+                if(fromDepRange!="")
+                    ifBothClicked(from);
                 else
-                    ifStopCountClicked();
+                    ifStopCountClicked(from);
 
             }
         });
-        twostop.setOnClickListener(new View.OnClickListener() {
+        fromtwostop.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
-                stopCount=3;
-                changeStopCountBtnColor(stopCount);
+                fromStopCount=3;
+                fromStopCountBtnColor(fromStopCount);
                 filterCount=1;
 
-                if(depRange!="")
-                    ifBothClicked();
+                if(fromDepRange!="")
+                    ifBothClicked(from);
                 else
-                    ifStopCountClicked();
+                    ifStopCountClicked(from);
 
             }
         });
 
+        //stop count to filter
+        tozerostop.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                toStopCount=1;
+                toStopCountBtnColor(toStopCount);
+                filterCount=1;
 
-        btnDep1.setOnClickListener(new View.OnClickListener() {
+                if(toDepRange!="")
+                    ifBothClicked(to);
+                else
+                    ifStopCountClicked(to);
+
+            }
+        });
+        toonestop.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                toStopCount=2;
+                toStopCountBtnColor(toStopCount);
+                filterCount=1;
+
+                if(toDepRange!="")
+                    ifBothClicked(to);
+                else
+                    ifStopCountClicked(to);
+
+            }
+        });
+        totwostop.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                toStopCount=3;
+                toStopCountBtnColor(toStopCount);
+                filterCount=1;
+
+                if(toDepRange!="")
+                    ifBothClicked(to);
+                else
+                    ifStopCountClicked(to);
+
+            }
+        });
+
+//deptarture time filter
+        frombtnDep1.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 filterCount=2;
 
-                depRange="Before6am";
-                changeDepRangeBtnColor(depRange);
-                if(stopCount!=0){
-                    ifBothClicked();
+                fromDepRange="Before6am";
+                fromDepRangeBtnColor(fromDepRange);
+                if(fromStopCount!=0){
+                    ifBothClicked(from);
                 }else
-                    ifDepRangeClicked();
+                    ifDepRangeClicked(from);
 
             }
         });
-        btnDep2.setOnClickListener(new View.OnClickListener() {
+        frombtnDep2.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 filterCount = 2;
 
-                depRange = "6amTo12pm";
-                changeDepRangeBtnColor(depRange);
-                if(stopCount!=0){
-                    ifBothClicked();
+                fromDepRange = "6amTo12pm";
+                fromDepRangeBtnColor(fromDepRange);
+                if(fromStopCount!=0){
+                    ifBothClicked(from);
                 }else
-                    ifDepRangeClicked();
+                    ifDepRangeClicked(from);
 
             }
         });
-        btnDep3.setOnClickListener(new View.OnClickListener() {
+        frombtnDep3.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 filterCount=2;
 
-                depRange="12pmTo6pm";
-                changeDepRangeBtnColor(depRange);
-                if(stopCount!=0){
-                    ifBothClicked();
+                fromDepRange="12pmTo6pm";
+                fromDepRangeBtnColor(fromDepRange);
+                if(fromStopCount!=0){
+                    ifBothClicked(from);
                 }else
-                    ifDepRangeClicked();
+                    ifDepRangeClicked(from);
 
             }
         });
-        btnDep4.setOnClickListener(new View.OnClickListener() {
+        frombtnDep4.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 filterCount=2;
-                depRange="After6pm";
-                changeDepRangeBtnColor(depRange);
-                if(stopCount!=0){
-                    ifBothClicked();
+                fromDepRange="After6pm";
+                fromDepRangeBtnColor(fromDepRange);
+                if(fromStopCount!=0){
+                    ifBothClicked(from);
                 }else
-                    ifDepRangeClicked();
+                    ifDepRangeClicked(from);
+
+
+            }
+        });
+
+        //departure to filter
+        tobtnDep1.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                filterCount=2;
+
+                toDepRange="Before6am";
+                toDepRangeBtnColor(toDepRange);
+                if(toStopCount!=0){
+                    ifBothClicked(to);
+                }else
+                    ifDepRangeClicked(to);
+
+            }
+        });
+        tobtnDep2.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                filterCount = 2;
+
+                toDepRange = "6amTo12pm";
+                toDepRangeBtnColor(toDepRange);
+                if(toStopCount!=0){
+                    ifBothClicked(to);
+                }else
+                    ifDepRangeClicked(to);
+
+            }
+        });
+        tobtnDep3.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                filterCount=2;
+
+                toDepRange="12pmTo6pm";
+                toDepRangeBtnColor(toDepRange);
+                if(toStopCount!=0){
+                    ifBothClicked(to);
+                }else
+                    ifDepRangeClicked(to);
+
+            }
+        });
+        tobtnDep4.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                filterCount=2;
+                toDepRange="After6pm";
+                toDepRangeBtnColor(toDepRange);
+                if(toStopCount!=0){
+                    ifBothClicked(to);
+                }else
+                    ifDepRangeClicked(to);
 
 
             }
         });
     }
 
-    public void changeStopCountBtnColor(int stopCount){
+    public void fromStopCountBtnColor(int stopCount){
         if(stopCount==1){
-            zerostop.setBackground(getResources().getDrawable(R.drawable.roundcorner_red));
-            onestop.setBackground(getResources().getDrawable(R.drawable.roundcorner_grey));
-            twostop.setBackground(getResources().getDrawable(R.drawable.roundcorner_grey));
+            fromzerostop.setBackground(getResources().getDrawable(R.drawable.roundcorner_red));
+            fromonestop.setBackground(getResources().getDrawable(R.drawable.roundcorner_grey));
+            fromtwostop.setBackground(getResources().getDrawable(R.drawable.roundcorner_grey));
         }
         else if (stopCount==2){
-            zerostop.setBackground(getResources().getDrawable(R.drawable.roundcorner_grey));
-            onestop.setBackground(getResources().getDrawable(R.drawable.roundcorner_red));
-            twostop.setBackground(getResources().getDrawable(R.drawable.roundcorner_grey));
+            fromzerostop.setBackground(getResources().getDrawable(R.drawable.roundcorner_grey));
+            fromonestop.setBackground(getResources().getDrawable(R.drawable.roundcorner_red));
+            fromtwostop.setBackground(getResources().getDrawable(R.drawable.roundcorner_grey));
         }else if (stopCount==3){
-            zerostop.setBackground(getResources().getDrawable(R.drawable.roundcorner_grey));
-            onestop.setBackground(getResources().getDrawable(R.drawable.roundcorner_grey));
-            twostop.setBackground(getResources().getDrawable(R.drawable.roundcorner_red));
+            fromzerostop.setBackground(getResources().getDrawable(R.drawable.roundcorner_grey));
+            fromonestop.setBackground(getResources().getDrawable(R.drawable.roundcorner_grey));
+            fromtwostop.setBackground(getResources().getDrawable(R.drawable.roundcorner_red));
         }
     }
 
-    public void changeDepRangeBtnColor(String depRange){
+    public void toStopCountBtnColor(int stopCount){
+        if(stopCount==1){
+            tozerostop.setBackground(getResources().getDrawable(R.drawable.roundcorner_red));
+            toonestop.setBackground(getResources().getDrawable(R.drawable.roundcorner_grey));
+            totwostop.setBackground(getResources().getDrawable(R.drawable.roundcorner_grey));
+        }
+        else if (stopCount==2){
+            tozerostop.setBackground(getResources().getDrawable(R.drawable.roundcorner_grey));
+            toonestop.setBackground(getResources().getDrawable(R.drawable.roundcorner_red));
+            totwostop.setBackground(getResources().getDrawable(R.drawable.roundcorner_grey));
+        }else if (stopCount==3){
+            tozerostop.setBackground(getResources().getDrawable(R.drawable.roundcorner_grey));
+            toonestop.setBackground(getResources().getDrawable(R.drawable.roundcorner_grey));
+            totwostop.setBackground(getResources().getDrawable(R.drawable.roundcorner_red));
+        }
+    }
+
+    public void fromDepRangeBtnColor(String depRange){
         Log.d(TAG, "fun "+depRange);
         if(depRange.equals("Before6am")){
             Log.d(TAG, "if");
-            btnDep1.setBackground(getResources().getDrawable(R.drawable.roundcorner_red));
-            btnDep2.setBackground(getResources().getDrawable(R.drawable.roundcorner_grey));
-            btnDep3.setBackground(getResources().getDrawable(R.drawable.roundcorner_grey));
-            btnDep4.setBackground(getResources().getDrawable(R.drawable.roundcorner_grey));
+            frombtnDep1.setBackground(getResources().getDrawable(R.drawable.roundcorner_red));
+            frombtnDep2.setBackground(getResources().getDrawable(R.drawable.roundcorner_grey));
+            frombtnDep3.setBackground(getResources().getDrawable(R.drawable.roundcorner_grey));
+            frombtnDep4.setBackground(getResources().getDrawable(R.drawable.roundcorner_grey));
         }else if(depRange.equals("6amTo12pm")){
-            btnDep1.setBackground(getResources().getDrawable(R.drawable.roundcorner_grey));
-            btnDep2.setBackground(getResources().getDrawable(R.drawable.roundcorner_red));
-            btnDep3.setBackground(getResources().getDrawable(R.drawable.roundcorner_grey));
-            btnDep4.setBackground(getResources().getDrawable(R.drawable.roundcorner_grey));
+            frombtnDep1.setBackground(getResources().getDrawable(R.drawable.roundcorner_grey));
+            frombtnDep2.setBackground(getResources().getDrawable(R.drawable.roundcorner_red));
+            frombtnDep3.setBackground(getResources().getDrawable(R.drawable.roundcorner_grey));
+            frombtnDep4.setBackground(getResources().getDrawable(R.drawable.roundcorner_grey));
         }else if(depRange.equals("12pmTo6pm")){
-            btnDep1.setBackground(getResources().getDrawable(R.drawable.roundcorner_grey));
-            btnDep2.setBackground(getResources().getDrawable(R.drawable.roundcorner_grey));
-            btnDep3.setBackground(getResources().getDrawable(R.drawable.roundcorner_red));
-            btnDep4.setBackground(getResources().getDrawable(R.drawable.roundcorner_grey));
+            frombtnDep1.setBackground(getResources().getDrawable(R.drawable.roundcorner_grey));
+            frombtnDep2.setBackground(getResources().getDrawable(R.drawable.roundcorner_grey));
+            frombtnDep3.setBackground(getResources().getDrawable(R.drawable.roundcorner_red));
+            frombtnDep4.setBackground(getResources().getDrawable(R.drawable.roundcorner_grey));
         }else if(depRange.equals("After6pm")){
-            btnDep1.setBackground(getResources().getDrawable(R.drawable.roundcorner_grey));
-            btnDep2.setBackground(getResources().getDrawable(R.drawable.roundcorner_grey));
-            btnDep3.setBackground(getResources().getDrawable(R.drawable.roundcorner_grey));
-            btnDep4.setBackground(getResources().getDrawable(R.drawable.roundcorner_red));
+            frombtnDep1.setBackground(getResources().getDrawable(R.drawable.roundcorner_grey));
+            frombtnDep2.setBackground(getResources().getDrawable(R.drawable.roundcorner_grey));
+            frombtnDep3.setBackground(getResources().getDrawable(R.drawable.roundcorner_grey));
+            frombtnDep4.setBackground(getResources().getDrawable(R.drawable.roundcorner_red));
+        }
+    }
+
+    public void toDepRangeBtnColor(String depRange){
+        Log.d(TAG, "fun "+depRange);
+        if(depRange.equals("Before6am")){
+            Log.d(TAG, "if");
+            tobtnDep1.setBackground(getResources().getDrawable(R.drawable.roundcorner_red));
+            tobtnDep2.setBackground(getResources().getDrawable(R.drawable.roundcorner_grey));
+            tobtnDep3.setBackground(getResources().getDrawable(R.drawable.roundcorner_grey));
+            tobtnDep4.setBackground(getResources().getDrawable(R.drawable.roundcorner_grey));
+        }else if(depRange.equals("6amTo12pm")){
+            tobtnDep1.setBackground(getResources().getDrawable(R.drawable.roundcorner_grey));
+            tobtnDep2.setBackground(getResources().getDrawable(R.drawable.roundcorner_red));
+            tobtnDep3.setBackground(getResources().getDrawable(R.drawable.roundcorner_grey));
+            tobtnDep4.setBackground(getResources().getDrawable(R.drawable.roundcorner_grey));
+        }else if(depRange.equals("12pmTo6pm")){
+            tobtnDep1.setBackground(getResources().getDrawable(R.drawable.roundcorner_grey));
+            tobtnDep2.setBackground(getResources().getDrawable(R.drawable.roundcorner_grey));
+            tobtnDep3.setBackground(getResources().getDrawable(R.drawable.roundcorner_red));
+            tobtnDep4.setBackground(getResources().getDrawable(R.drawable.roundcorner_grey));
+        }else if(depRange.equals("After6pm")){
+            tobtnDep1.setBackground(getResources().getDrawable(R.drawable.roundcorner_grey));
+            tobtnDep2.setBackground(getResources().getDrawable(R.drawable.roundcorner_grey));
+            tobtnDep3.setBackground(getResources().getDrawable(R.drawable.roundcorner_grey));
+            tobtnDep4.setBackground(getResources().getDrawable(R.drawable.roundcorner_red));
         }
     }
 
@@ -363,53 +505,53 @@ public class Filters extends AppCompatActivity {
 
     }
 
-    public void ifStopCountClicked(){
+    public void ifStopCountClicked(String val){
         updateDataOnSliderChanger(sliderPrice);
-        filterByStopCount();
+        filterByStopCount(val);
     }
 
-    public void ifDepRangeClicked(){
+    public void ifDepRangeClicked(String val){
         updateDataOnSliderChanger(sliderPrice);
-        filterDepTime();
+        filterDepTime(val);
     }
 
-    public void ifBothClicked(){
+    public void ifBothClicked(String val){
         updateDataOnSliderChanger(sliderPrice);
-        filterByStopCount();
-        filterDepTime();
+        filterByStopCount(val);
+        filterDepTime(val);
     }
 
 
-    public void filterByStopCount(){
+    public void filterByStopCount(String val){
         Log.d(TAG, "fsc: "+newoneway.size()+" "+newreturnway.size());
 
         ArrayList index=new ArrayList();
-        if(fromto=="from"){
+        if(val=="from"){
             for(int j=0;j<newoneway.size();j++){
-                if(stopCount==1 && !(newoneway.get(j).size()==1)){
+                if(fromStopCount==1 && !(newoneway.get(j).size()==1)){
                     Log.d(TAG, "filterByStopCount: "+newoneway.get(j).size());
                     index.add(j);
                 }
-                else if(stopCount==2 && !(newoneway.get(j).size()==2)){
+                else if(fromStopCount==2 && !(newoneway.get(j).size()==2)){
                     Log.d(TAG, "filterByStopCount: "+newoneway.get(j).size());
                     index.add(j);
                 }
-                else if(stopCount>2 && !(newoneway.get(j).size()>2)){
+                else if(fromStopCount>2 && !(newoneway.get(j).size()>2)){
                     Log.d(TAG, "filterByStopCount: "+newoneway.get(j).size());
                     index.add(j);
                 }
             }
         }
-        else if(fromto=="to"){
+        else if(val=="to"){
             for(int i=0;i<newoneway.size();i++){
 
-                if(stopCount==1 && newoneway.get(i).size()==1){
+                if(toStopCount==1 && !(newoneway.get(i).size()==1)){
                     index.add(i);
                 }
-                else if(stopCount==2 && newoneway.get(i).size()==2){
+                else if(toStopCount==2 && !(newoneway.get(i).size()==2)){
                     index.add(i);
                 }
-                else if(stopCount>2 && newoneway.get(i).size()>2){
+                else if(toStopCount>2 && !(newoneway.get(i).size()>2)){
                     index.add(i);
                 }
             }
@@ -431,19 +573,20 @@ public class Filters extends AppCompatActivity {
     }
 
 
-    public void filterDepTime(){
+    public void filterDepTime(String val){
 
-        Log.d(TAG, "fdt: "+newoneway.size()+" "+newreturnway.size()+" * +"+depRange);
+        Log.d(TAG, "fdt: "+newoneway.size()+" "+newreturnway.size()+" * +"+fromDepRange+" * "+toDepRange);
 
-        if(filterCount==2 && depRange!="" && stopCount==0) {
+        if(filterCount==2 && fromDepRange!="" && toDepRange!="" && fromStopCount==0 && toStopCount==0) {
             updateDataOnSliderChanger(sliderPrice);
-            depRange="";
+            fromDepRange="";
+            toDepRange="";
             Log.d(TAG, "fdt");
         }
 
         ArrayList index=new ArrayList();
 
-        if(fromto=="from"){
+        if(val=="from"){
             int c=0;
             if(depRange=="Before6am"){
                 Date endDate = new Date(departureDate+" 06:00:00");
@@ -485,7 +628,7 @@ public class Filters extends AppCompatActivity {
             }
 
         }
-        else if(fromto=="to"){
+        else if(val=="to"){
             int c=0;
             if(depRange=="Before6am"){
                 Date endDate = new Date(returnDate+" 06:00:00");
